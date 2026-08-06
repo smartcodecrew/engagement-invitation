@@ -1,13 +1,13 @@
 {
-  "name": "دعوة خطوبة — سارة وأحمد",
-  "short_name": "خطوبة",
-  "description": "دعوة خطوبة رقمية فاخرة",
+  "name": "دعوة خطوبة — صلاح وشروق",
+  "short_name": "صلاح وشروق",
+  "description": "تجربة دعوة خطوبة سينمائية فاخرة",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#090909",
-  "theme_color": "#090909",
+  "background_color": "#050505",
+  "theme_color": "#050505",
   "lang": "ar",
   "dir": "rtl",
   "icons": [
@@ -16,12 +16,6 @@
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
-    },
-    {
-      "src": "assets/icons/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
     }
   ]
 }

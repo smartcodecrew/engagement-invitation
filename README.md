@@ -109,7 +109,24 @@ const CONFIG = {
 };
 ```
 
-### Replace gallery images
+### Personalized guest links
+
+The site **cannot** read a guest’s name from their phone. Instead, send each person a unique URL:
+
+```text
+https://smartcodecrew.github.io/engagement-invitation/?to=محمد
+```
+
+Optional short IDs via `CONFIG.guests` in `script.js`:
+
+```js
+guests: {
+  mohamed: "محمد العتيبي",
+},
+// then share: ?id=mohamed
+```
+
+Use **`guests.html`** to generate WhatsApp-ready links for a list of names.
 
 1. Add photos to `assets/images/`.
 2. Update `CONFIG.gallery` paths and `alt` text.

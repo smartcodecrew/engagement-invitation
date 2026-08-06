@@ -66,6 +66,23 @@ const CONFIG = {
   openedStorageKey: "engagement_opened_v1",
   rsvpThanksAttend: "سعداء بحضوركم! ننتظركم بفارغ الصبر.",
   rsvpThanksDecline: "نشكركم على الرد. نتمنى لكم كل الخير.",
+
+  /* Personalized guest invitations via URL:
+     ?to=محمد   or   ?name=محمد   or   ?id=mohamed
+     Optional guest book (short id → full name): */
+  guests: {
+    // mohamed: "محمد العتيبي",
+    // fatima: "فاطمة الأحمد",
+  },
+  guestHeroGreeting: "أهلاً بك يا {name}",
+  guestInviteLine: "دعوة خاصة إلى {name}",
+  guestInviteMessage: "يتشرف أهل العروسين بدعوة {name} لحضور حفل خطوبتهما",
+};
+
+/* Current guest (resolved from URL) */
+const GUEST = {
+  name: "",
+  id: "",
 };
 
 /* --------------------------------------------------------------------------
@@ -133,9 +150,92 @@ function trapFocus(container, event) {
 }
 
 /* --------------------------------------------------------------------------
+   Guest personalization (URL-based — not phone identity)
+   Examples:
+     ?to=محمد
+     ?name=سارة
+     ?id=mohamed   (looks up CONFIG.guests.mohamed)
+   -------------------------------------------------------------------------- */
+function sanitizeGuestName(raw) {
+  if (!raw) return "";
+  try {
+    raw = decodeURIComponent(String(raw).replace(/\+/g, " "));
+  } catch {
+    raw = String(raw);
+  }
+  return raw
+    .replace(/[<>"'`\\]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 40);
+}
+
+function resolveGuestFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const id = sanitizeGuestName(params.get("id") || "").toLowerCase();
+  let name = "";
+
+  if (id && CONFIG.guests && CONFIG.guests[id]) {
+    name = sanitizeGuestName(CONFIG.guests[id]);
+    GUEST.id = id;
+  } else {
+    name = sanitizeGuestName(params.get("to") || params.get("name") || params.get("guest") || "");
+  }
+
+  GUEST.name = name;
+  return name;
+}
+
+function formatGuestCopy(template, name) {
+  return String(template || "").replace(/\{name\}/g, name);
+}
+
+function applyGuestPersonalization() {
+  const name = GUEST.name || resolveGuestFromUrl();
+  if (!name) return;
+
+  const heroGuest = $("#hero-guest");
+  if (heroGuest) {
+    heroGuest.hidden = false;
+    heroGuest.textContent = formatGuestCopy(CONFIG.guestHeroGreeting, name);
+  }
+
+  const inviteGuest = $("#invite-guest");
+  if (inviteGuest) {
+    inviteGuest.hidden = false;
+    inviteGuest.textContent = formatGuestCopy(CONFIG.guestInviteLine, name);
+  }
+
+  setText("invite-message", formatGuestCopy(CONFIG.guestInviteMessage, name));
+
+  const rsvpInput = $("#rsvp-name");
+  if (rsvpInput && !rsvpInput.value) {
+    rsvpInput.value = name;
+  }
+
+  document.title = `${CONFIG.heroTitleAr} | إلى ${name}`;
+}
+
+/**
+ * Build a shareable invitation URL for a guest name or id.
+ * Usage in console: buildGuestLink("محمد")
+ * Or with id: buildGuestLink(null, "mohamed")
+ */
+function buildGuestLink(name, id) {
+  const url = new URL(CONFIG.siteUrl || window.location.href.split("?")[0]);
+  if (id) url.searchParams.set("id", id);
+  else if (name) url.searchParams.set("to", name);
+  return url.toString();
+}
+
+window.buildGuestLink = buildGuestLink;
+
+/* --------------------------------------------------------------------------
    Apply CONFIG
    -------------------------------------------------------------------------- */
 function applyConfig() {
+  resolveGuestFromUrl();
+
   setText("hero-title-ar", CONFIG.heroTitleAr);
   setText("hero-title-en", CONFIG.heroTitleEn);
   setText("hero-bride", CONFIG.brideShort);
@@ -165,6 +265,7 @@ function applyConfig() {
 
   document.title = `${CONFIG.heroTitleAr} | ${CONFIG.brideShort} & ${CONFIG.groomShort}`;
   setupCalendarLink();
+  applyGuestPersonalization();
 }
 
 function setupCalendarLink() {
@@ -472,7 +573,10 @@ function initRSVP() {
   };
 
   try {
-    const saved = localStorage.getItem(CONFIG.rsvpStorageKey);
+    const key = GUEST.name
+      ? `${CONFIG.rsvpStorageKey}__${GUEST.name}`
+      : CONFIG.rsvpStorageKey;
+    const saved = localStorage.getItem(key);
     if (saved) {
       const data = JSON.parse(saved);
       if (typeof data.attending === "boolean") {
@@ -484,10 +588,13 @@ function initRSVP() {
   }
 
   const save = (attending) => {
-    const name = (nameInput?.value || "").trim().slice(0, 60);
+    const name = (nameInput?.value || GUEST.name || "").trim().slice(0, 60);
+    const key = GUEST.name
+      ? `${CONFIG.rsvpStorageKey}__${GUEST.name}`
+      : CONFIG.rsvpStorageKey;
     try {
       localStorage.setItem(
-        CONFIG.rsvpStorageKey,
+        key,
         JSON.stringify({ attending, name, savedAt: new Date().toISOString() })
       );
     } catch {

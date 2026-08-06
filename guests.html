@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>مولّد روابط الضيوف</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #090909;
+      --accent: #d4af37;
+      --text: #fff;
+      --muted: #cfcfcf;
+      --card: rgba(255, 255, 255, 0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Cairo, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1.25rem 4rem;
+      line-height: 1.7;
+    }
+    .wrap { max-width: 640px; margin: 0 auto; }
+    h1 {
+      font-size: 1.75rem;
+      background: linear-gradient(135deg, #fff, #f5e6a3);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    .lead { color: var(--muted); margin-bottom: 1.75rem; }
+    label { display: block; margin-bottom: 0.4rem; color: var(--accent); font-weight: 600; }
+    textarea, input {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      background: rgba(0, 0, 0, 0.4);
+      color: var(--text);
+      font: inherit;
+      margin-bottom: 1rem;
+    }
+    textarea { min-height: 160px; resize: vertical; }
+    button {
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      border-radius: 999px;
+      padding: 0.85rem 1.5rem;
+      background: linear-gradient(135deg, #f5e6a3, #d4af37, #8b6914);
+      color: #1a1408;
+      margin-left: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .list { margin-top: 1.5rem; display: grid; gap: 0.75rem; }
+    .row {
+      background: var(--card);
+      border: 1px solid rgba(212, 175, 55, 0.22);
+      border-radius: 14px;
+      padding: 1rem;
+    }
+    .row strong { display: block; margin-bottom: 0.35rem; }
+    .row a { color: var(--accent); word-break: break-all; font-size: 0.9rem; }
+    .actions { margin-top: 0.65rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .actions button {
+      background: transparent;
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      color: var(--accent);
+      padding: 0.45rem 0.9rem;
+      font-size: 0.85rem;
+    }
+    .hint {
+      margin-top: 1.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 1rem;
+      border: 1px dashed rgba(212, 175, 55, 0.3);
+      border-radius: 12px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a1a;
+      border: 1px solid var(--accent);
+      padding: 0.7rem 1.2rem;
+      border-radius: 999px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>مولّد روابط الضيوف</h1>
+    <p class="lead">
+      اكتب اسم كل مدعو في سطر، ثم انسخ رابط الدعوة المخصص أو أرسله عبر واتساب.
+      الموقع لا يقرأ الاسم من التليفون — أنت ترسل رابطًا فيه الاسم.
+    </p>
+
+    <label for="base">رابط الدعوة الأساسي</label>
+    <input id="base" type="url" value="https://smartcodecrew.github.io/engagement-invitation/" />
+
+    <label for="names">أسماء الضيوف (اسم في كل سطر)</label>
+    <textarea id="names" placeholder="محمد العتيبي&#10;فاطمة الأحمد&#10;خالد"></textarea>
+
+    <button type="button" id="generate">توليد الروابط</button>
+
+    <div class="list" id="list"></div>
+
+    <p class="hint">
+      مثال الرابط الناتج:<br />
+      <code>.../engagement-invitation/?to=محمد</code><br /><br />
+      عند فتحه تظهر الدعوة مخصّصة: «أهلاً بك يا محمد».
+    </p>
+  </div>
+
+  <div class="toast" id="toast">تم النسخ</div>
+
+  <script>
+    const baseInput = document.getElementById("base");
+    const namesInput = document.getElementById("names");
+    const list = document.getElementById("list");
+    const toast = document.getElementById("toast");
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1600);
+    }
+
+    function buildLink(name) {
+      const base = (baseInput.value || "").replace(/\/?$/, "/");
+      return `${base}?to=${encodeURIComponent(name)}`;
+    }
+
+    function whatsappUrl(name, link) {
+      const text = `السلام عليكم ${name} 🌿\nنتشرف بدعوتكم لحضور حفل الخطوبة:\n${link}`;
+      return `https://wa.me/?text=${encodeURIComponent(text)}`;
+    }
+
+    document.getElementById("generate").addEventListener("click", () => {
+      const names = namesInput.value
+        .split(/\n+/)
+        .map((n) => n.trim())
+        .filter(Boolean);
+
+      list.innerHTML = "";
+      if (!names.length) {
+        showToast("أضف اسمًا واحدًا على الأقل");
+        return;
+      }
+
+      names.forEach((name) => {
+        const link = buildLink(name);
+        const row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML = `
+          <strong>${name}</strong>
+          <a href="${link}" target="_blank" rel="noopener">${link}</a>
+          <div class="actions">
+            <button type="button" data-copy="${link}">نسخ الرابط</button>
+            <a href="${whatsappUrl(name, link)}" target="_blank" rel="noopener">
+              <button type="button">واتساب</button>
+            </a>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    });
+
+    list.addEventListener("click", async (e) => {
+      const btn = e.target.closest("[data-copy]");
+      if (!btn) return;
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy);
+        showToast("تم نسخ الرابط");
+      } catch {
+        showToast("تعذر النسخ");
+      }
+    });
+  </script>
+</body>
+</html>

@@ -533,10 +533,19 @@ body:not(.is-invitation-locked) .invite-gated {
   max-width: 720px;
 }
 
-.hero__eyebrow {
+.hero__guest {
+  color: var(--accent);
+  font-size: clamp(1.05rem, 3vw, 1.35rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.invite__guest {
   color: var(--accent-soft);
-  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
-  margin-bottom: 1.5rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.85rem;
 }
 
 .hero__title {

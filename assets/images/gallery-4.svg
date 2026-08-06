@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Gallery 4">
+  <defs>
+    <linearGradient id="bg4" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#100e0a"/>
+      <stop offset="100%" stop-color="#090909"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg4)"/>
+  <g fill="none" stroke="#D4AF37" stroke-opacity="0.45" transform="translate(400 450)">
+    <ellipse rx="40" ry="90" transform="rotate(0)"/>
+    <ellipse rx="40" ry="90" transform="rotate(45)"/>
+    <ellipse rx="40" ry="90" transform="rotate(90)"/>
+    <ellipse rx="40" ry="90" transform="rotate(135)"/>
+  </g>
+  <circle cx="400" cy="450" r="18" fill="#D4AF37" opacity="0.5"/>
+  <circle cx="400" cy="450" r="8" fill="#F5E6A3" opacity="0.8"/>
+  <path d="M400 540 C390 600 370 650 400 720 C430 650 410 600 400 540" fill="none" stroke="#8B6914" stroke-width="2" opacity="0.6"/>
+  <text x="400" y="820" text-anchor="middle" fill="#D4AF37" font-family="Georgia, serif" font-size="16" letter-spacing="6">ROSES &amp; GOLD</text>
+</svg>

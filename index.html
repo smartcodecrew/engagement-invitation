@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- Primary SEO -->
+  <title>دعوة خطوبة | Engagement Invitation</title>
+  <meta name="description" content="دعوة خطوبة فاخرة — نتشرف بدعوتكم لحضور حفل خطوبتنا. Luxury digital engagement invitation." />
+  <meta name="keywords" content="دعوة خطوبة, engagement invitation, wedding, خطوبة, دعوة رقمية" />
+  <meta name="author" content="Engagement Invitation" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#D4AF37" />
+  <meta name="msapplication-TileColor" content="#090909" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://example.com/" />
+  <meta property="og:title" content="دعوة خطوبة | Engagement Invitation" />
+  <meta property="og:description" content="نتشرف بدعوتكم لحضور حفل خطوبتنا — A luxury digital engagement invitation." />
+  <meta property="og:image" content="assets/icons/favicon.svg" />
+  <meta property="og:locale" content="ar_SA" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="دعوة خطوبة | Engagement Invitation" />
+  <meta name="twitter:description" content="نتشرف بدعوتكم لحضور حفل خطوبتنا." />
+  <meta name="twitter:image" content="assets/icons/favicon.svg" />
+
+  <!-- Favicon & Manifest -->
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+  <link rel="apple-touch-icon" href="assets/icons/favicon.svg" />
+  <link rel="manifest" href="site.webmanifest" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- AOS -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Skip link for accessibility -->
+  <a class="skip-link" href="#main-content">تخطي إلى المحتوى</a>
+
+  <!-- =========================
+       1. LOADING SCREEN
+       ========================= -->
+  <div id="loader" class="loader" role="status" aria-live="polite" aria-label="جاري التحميل">
+    <div class="loader__inner">
+      <div class="loader__ring"></div>
+      <div class="loader__ring loader__ring--delay"></div>
+      <div class="loader__monogram" aria-hidden="true">∞</div>
+      <p class="loader__text">جاري التحضير…</p>
+      <div class="loader__bar" aria-hidden="true">
+        <span class="loader__bar-fill"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating ambient orbs -->
+  <div class="ambient" aria-hidden="true">
+    <span class="ambient__orb ambient__orb--1"></span>
+    <span class="ambient__orb ambient__orb--2"></span>
+    <span class="ambient__orb ambient__orb--3"></span>
+  </div>
+
+  <!-- Particle canvas -->
+  <canvas id="particles" class="particles" aria-hidden="true"></canvas>
+
+  <main id="main-content">
+
+    <!-- =========================
+         2. HERO SECTION
+         ========================= -->
+    <section id="hero" class="hero" aria-label="الصفحة الرئيسية">
+      <div class="hero__glow" aria-hidden="true"></div>
+      <div class="hero__content">
+        <p class="hero__eyebrow" data-aos="fade-down">بسم الله الرحمن الرحيم</p>
+        <h1 class="hero__title">
+          <span class="hero__title-line" id="hero-title-ar">دعوة خطوبة</span>
+          <span class="hero__title-en" id="hero-title-en">Engagement Invitation</span>
+        </h1>
+        <div class="hero__names" id="hero-names">
+          <span class="hero__name hero__name--bride" id="hero-bride">سارة</span>
+          <span class="hero__ampersand" aria-hidden="true">&</span>
+          <span class="hero__name hero__name--groom" id="hero-groom">أحمد</span>
+        </div>
+        <p class="hero__date" id="hero-date">١٥ ربيع الأول ١٤٤٧ هـ</p>
+        <button type="button" id="btn-open" class="btn btn--gold" aria-label="فتح الدعوة">
+          <span>فتح الدعوة</span>
+          <i class="fa-solid fa-envelope-open" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="hero__scroll" aria-hidden="true">
+        <span></span>
+      </div>
+    </section>
+
+    <!-- =========================
+         3. ENVELOPE ANIMATION
+         ========================= -->
+    <section id="envelope-section" class="envelope-section" aria-hidden="true" hidden>
+      <div class="envelope-stage" id="envelope-stage">
+        <div class="envelope" id="envelope" role="img" aria-label="ظرف الدعوة">
+          <div class="envelope__flap"></div>
+          <div class="envelope__body"></div>
+          <div class="envelope__pocket"></div>
+          <div class="envelope__seal" aria-hidden="true">
+            <span>∞</span>
+          </div>
+          <div class="invite-card" id="invite-card-preview">
+            <div class="invite-card__inner">
+              <p class="invite-card__mini">دعوة خطوبة</p>
+              <p class="invite-card__mini-names"><span id="preview-bride">سارة</span> &amp; <span id="preview-groom">أحمد</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         4. INVITATION CARD
+         ========================= -->
+    <section id="invitation" class="section invitation invite-gated" aria-labelledby="invitation-heading">
+      <div class="section__ornament" aria-hidden="true">✦</div>
+      <div class="container">
+        <header class="section__header" data-aos="fade-up">
+          <p class="section__eyebrow">الدعوة</p>
+          <h2 id="invitation-heading" class="section__title">بطاقة الدعوة</h2>
+        </header>
+
+        <article class="invite" data-aos="zoom-in" data-aos-duration="1000">
+          <div class="invite__border">
+            <div class="invite__corner invite__corner--tl"></div>
+            <div class="invite__corner invite__corner--tr"></div>
+            <div class="invite__corner invite__corner--bl"></div>
+            <div class="invite__corner invite__corner--br"></div>
+
+            <div class="invite__content">
+              <p class="invite__bismillah">بسم الله الرحمن الرحيم</p>
+              <p class="invite__verse" id="invite-verse">
+                وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا
+              </p>
+              <div class="invite__divider" aria-hidden="true">
+                <span></span><i class="fa-solid fa-heart"></i><span></span>
+              </div>
+              <p class="invite__intro" id="invite-message">
+                يتشرف أهل العروسين بدعوتكم لحضور حفل خطوبتهما
+              </p>
+              <div class="invite__couple">
+                <h3 class="invite__person">
+                  <span class="invite__role">العروس</span>
+                  <span class="invite__person-name" id="invite-bride">سارة محمد</span>
+                </h3>
+                <span class="invite__and" aria-hidden="true">&</span>
+                <h3 class="invite__person">
+                  <span class="invite__role">العريس</span>
+                  <span class="invite__person-name" id="invite-groom">أحمد علي</span>
+                </h3>
+              </div>
+              <ul class="invite__details" role="list">
+                <li>
+                  <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                  <div>
+                    <span class="invite__label">التاريخ</span>
+                    <span class="invite__value" id="invite-date">الجمعة، ١٥ ربيع الأول ١٤٤٧ هـ</span>
+                  </div>
+                </li>
+                <li>
+                  <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                  <div>
+                    <span class="invite__label">الوقت</span>
+                    <span class="invite__value" id="invite-time">٧:٠٠ مساءً</span>
+                  </div>
+                </li>
+                <li>
+                  <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                  <div>
+                    <span class="invite__label">المكان</span>
+                    <span class="invite__value" id="invite-venue">قاعة الياسمين الفاخرة — الرياض</span>
+                  </div>
+                </li>
+              </ul>
+              <p class="invite__closing" id="invite-closing">حضوركم يسعدنا ويُكمل فرحتنا</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- =========================
+         5. COUNTDOWN TIMER
+         ========================= -->
+    <section id="countdown" class="section countdown invite-gated" aria-labelledby="countdown-heading">
+      <div class="container">
+        <header class="section__header" data-aos="fade-up">
+          <p class="section__eyebrow">العدّ التنازلي</p>
+          <h2 id="countdown-heading" class="section__title">نلتقي بعد</h2>
+        </header>
+        <div class="countdown__grid" id="countdown-grid" role="timer" aria-live="polite" aria-atomic="true">
+          <div class="countdown__unit" data-aos="fade-up" data-aos-delay="0">
+            <span class="countdown__num" id="cd-days">00</span>
+            <span class="countdown__label">يوم</span>
+          </div>
+          <div class="countdown__unit" data-aos="fade-up" data-aos-delay="100">
+            <span class="countdown__num" id="cd-hours">00</span>
+            <span class="countdown__label">ساعة</span>
+          </div>
+          <div class="countdown__unit" data-aos="fade-up" data-aos-delay="200">
+            <span class="countdown__num" id="cd-minutes">00</span>
+            <span class="countdown__label">دقيقة</span>
+          </div>
+          <div class="countdown__unit" data-aos="fade-up" data-aos-delay="300">
+            <span class="countdown__num" id="cd-seconds">00</span>
+            <span class="countdown__label">ثانية</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         6. GALLERY
+         ========================= -->
+    <section id="gallery" class="section gallery invite-gated" aria-labelledby="gallery-heading">
+      <div class="container">
+        <header class="section__header" data-aos="fade-up">
+          <p class="section__eyebrow">الذكريات</p>
+          <h2 id="gallery-heading" class="section__title">معرض الصور</h2>
+        </header>
+        <div class="gallery__grid" id="gallery-grid" role="list"></div>
+      </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="عرض الصورة" hidden>
+      <button type="button" class="lightbox__close" id="lightbox-close" aria-label="إغلاق">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+      <button type="button" class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" aria-label="الصورة السابقة">
+        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+      </button>
+      <img id="lightbox-img" class="lightbox__img" src="" alt="" />
+      <button type="button" class="lightbox__nav lightbox__nav--next" id="lightbox-next" aria-label="الصورة التالية">
+        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <!-- =========================
+         7. MUSIC — floating button in HTML body end
+         ========================= -->
+
+    <!-- =========================
+         8. LOCATION
+         ========================= -->
+    <section id="location" class="section location invite-gated" aria-labelledby="location-heading">
+      <div class="container">
+        <header class="section__header" data-aos="fade-up">
+          <p class="section__eyebrow">الموقع</p>
+          <h2 id="location-heading" class="section__title">كيف تصلون إلينا</h2>
+          <p class="section__subtitle" id="location-venue">قاعة الياسمين الفاخرة — الرياض</p>
+        </header>
+        <div class="location__card" data-aos="fade-up">
+          <div class="location__map-visual" aria-hidden="true">
+            <i class="fa-solid fa-map-location-dot"></i>
+            <div class="location__pulse"></div>
+          </div>
+          <p class="location__hint">اضغط لفتح الموقع في خرائط Google</p>
+          <a id="maps-link" class="btn btn--gold" href="#" target="_blank" rel="noopener noreferrer" aria-label="فتح الموقع في خرائط Google">
+            <i class="fa-solid fa-map" aria-hidden="true"></i>
+            <span>فتح الموقع</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         9. RSVP
+         ========================= -->
+    <section id="rsvp" class="section rsvp invite-gated" aria-labelledby="rsvp-heading">
+      <div class="container">
+        <header class="section__header" data-aos="fade-up">
+          <p class="section__eyebrow">تأكيد الحضور</p>
+          <h2 id="rsvp-heading" class="section__title">هل ستحضرون؟</h2>
+        </header>
+        <div class="rsvp__card" data-aos="zoom-in" id="rsvp-card">
+          <div id="rsvp-form" class="rsvp__form">
+            <label class="sr-only" for="rsvp-name">اسمك</label>
+            <input type="text" id="rsvp-name" class="rsvp__input" placeholder="اكتب اسمك (اختياري)" autocomplete="name" maxlength="60" />
+            <div class="rsvp__actions">
+              <button type="button" class="btn btn--attend" id="rsvp-yes" aria-label="سأحضر">
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                <span>سأحضر</span>
+              </button>
+              <button type="button" class="btn btn--decline" id="rsvp-no" aria-label="للأسف لا أستطيع">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                <span>للأسف لا أستطيع</span>
+              </button>
+            </div>
+          </div>
+          <div id="rsvp-thanks" class="rsvp__thanks" hidden>
+            <div class="rsvp__thanks-icon" aria-hidden="true">✦</div>
+            <p class="rsvp__thanks-title" id="rsvp-thanks-title">شكرًا لك</p>
+            <p class="rsvp__thanks-msg" id="rsvp-thanks-msg"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================
+         10. TIMELINE
+         ========================= -->
+    <section id="timeline" class="section timeline invite-gated" aria-labelledby="timeline-heading">
+      <div class="container">
+        <header class="section__header" data-aos="fade-up">
+          <p class="section__eyebrow">رحلتنا</p>
+          <h2 id="timeline-heading" class="section__title">محطات الفرح</h2>
+        </header>
+        <ol class="timeline__list" id="timeline-list"></ol>
+      </div>
+    </section>
+
+    <!-- =========================
+         11. QUOTE
+         ========================= -->
+    <section id="quote" class="section quote invite-gated" aria-labelledby="quote-heading">
+      <div class="container">
+        <blockquote class="quote__block" data-aos="fade-up">
+          <span class="quote__mark" aria-hidden="true">“</span>
+          <p class="quote__text" id="quote-text">
+            الحب ليس أن ننظر إلى بعضنا البعض، بل أن ننظر معًا في نفس الاتجاه.
+          </p>
+          <footer class="quote__author" id="quote-author">— أنطوان دو سانت إكزوبيري</footer>
+          <h2 id="quote-heading" class="sr-only">اقتباس رومانسي</h2>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- =========================
+         12. THANK YOU
+         ========================= -->
+    <section id="thanks" class="section thanks invite-gated" aria-labelledby="thanks-heading">
+      <div class="container">
+        <div class="thanks__content" data-aos="fade-up">
+          <div class="thanks__ornament" aria-hidden="true">∞</div>
+          <h2 id="thanks-heading" class="thanks__title">شكرًا لوجودكم في حياتنا</h2>
+          <p class="thanks__text" id="thanks-text">
+            حضوركم ودعواتكم تعني لنا الكثير. نسأل الله أن يجمعنا على الخير والبركة.
+          </p>
+          <p class="thanks__names" id="thanks-names">سارة &amp; أحمد</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <p class="footer__text">صُممت بحب · Made with love</p>
+  </footer>
+
+  <!-- =========================
+       MUSIC PLAYER (floating)
+       ========================= -->
+  <div class="music-player" id="music-player">
+    <audio id="bg-music" preload="none" loop></audio>
+    <button type="button" id="music-toggle" class="music-player__btn" aria-label="تشغيل الموسيقى" aria-pressed="false">
+      <i class="fa-solid fa-music" aria-hidden="true"></i>
+      <span class="music-player__wave" aria-hidden="true">
+        <i></i><i></i><i></i>
+      </span>
+    </button>
+  </div>
+
+  <!-- Confetti canvas -->
+  <canvas id="confetti" class="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

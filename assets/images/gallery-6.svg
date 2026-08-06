@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Gallery 6">
+  <defs>
+    <linearGradient id="bg6" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#090909"/>
+      <stop offset="50%" stop-color="#16130e"/>
+      <stop offset="100%" stop-color="#090909"/>
+    </linearGradient>
+    <linearGradient id="gold6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5E6A3"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg6)"/>
+  <text x="400" y="420" text-anchor="middle" fill="url(#gold6)" font-family="Georgia, serif" font-size="72" opacity="0.9">&amp;</text>
+  <text x="400" y="340" text-anchor="middle" fill="#FFFFFF" font-family="Georgia, serif" font-size="36" letter-spacing="4">BRIDE</text>
+  <text x="400" y="500" text-anchor="middle" fill="#FFFFFF" font-family="Georgia, serif" font-size="36" letter-spacing="4">GROOM</text>
+  <line x1="280" y1="360" x2="520" y2="360" stroke="#D4AF37" stroke-opacity="0.3" stroke-width="1"/>
+  <line x1="280" y1="520" x2="520" y2="520" stroke="#D4AF37" stroke-opacity="0.3" stroke-width="1"/>
+  <text x="400" y="620" text-anchor="middle" fill="#D4AF37" font-family="Georgia, serif" font-size="14" letter-spacing="6">A BEAUTIFUL MEMORY</text>
+</svg>

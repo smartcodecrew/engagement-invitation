@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Gallery 3">
+  <defs>
+    <radialGradient id="bg3" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#1a1610"/>
+      <stop offset="100%" stop-color="#090909"/>
+    </radialGradient>
+    <linearGradient id="gold3" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8B6914" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#8B6914" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg3)"/>
+  <line x1="160" y1="500" x2="640" y2="500" stroke="url(#gold3)" stroke-width="1"/>
+  <circle cx="280" cy="380" r="3" fill="#D4AF37" opacity="0.8"/>
+  <circle cx="400" cy="340" r="4" fill="#F5E6A3"/>
+  <circle cx="520" cy="380" r="3" fill="#D4AF37" opacity="0.8"/>
+  <circle cx="340" cy="480" r="2.5" fill="#D4AF37" opacity="0.6"/>
+  <circle cx="460" cy="480" r="2.5" fill="#D4AF37" opacity="0.6"/>
+  <path d="M400 300 L408 320 L430 322 L414 336 L418 358 L400 346 L382 358 L386 336 L370 322 L392 320 Z" fill="#D4AF37" opacity="0.7"/>
+  <text x="400" y="580" text-anchor="middle" fill="#CFCFCF" font-family="Georgia, serif" font-size="20" letter-spacing="5">CELEBRATION</text>
+  <text x="400" y="620" text-anchor="middle" fill="#D4AF37" font-family="Georgia, serif" font-size="14" letter-spacing="3" opacity="0.7">LIGHTS &amp; JOY</text>
+</svg>

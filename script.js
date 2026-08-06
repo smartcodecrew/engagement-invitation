@@ -1,29 +1,24 @@
 /* ==========================================================================
-   Luxury Engagement Invitation — Script
-   Edit CONFIG below to customize the entire site.
+   Luxury Engagement Invitation — Production Script
+   Edit CONFIG to customize the entire site.
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   CONFIG — single source of truth
-   -------------------------------------------------------------------------- */
 const CONFIG = {
-  /* Couple */
+  siteUrl: "https://smartcodecrew.github.io/engagement-invitation/",
+
   brideName: "سارة محمد",
   groomName: "أحمد علي",
   brideShort: "سارة",
   groomShort: "أحمد",
 
-  /* Event */
   dateDisplay: "الجمعة، ١٥ ربيع الأول ١٤٤٧ هـ",
   dateGregorian: "2026-09-18",
   timeDisplay: "٧:٠٠ مساءً",
   venue: "قاعة الياسمين الفاخرة — الرياض",
   mapsLink: "https://maps.google.com/?q=Riyadh+Saudi+Arabia",
+  eventDateTime: "2026-09-18T19:00:00+03:00",
+  eventDurationHours: 4,
 
-  /* Countdown target (ISO or parseable date string) */
-  eventDateTime: "2026-09-18T19:00:00",
-
-  /* Copy */
   heroTitleAr: "دعوة خطوبة",
   heroTitleEn: "Engagement Invitation",
   inviteVerse: "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا",
@@ -33,10 +28,8 @@ const CONFIG = {
   quoteAuthor: "— أنطوان دو سانت إكزوبيري",
   thanksText: "حضوركم ودعواتكم تعني لنا الكثير. نسأل الله أن يجمعنا على الخير والبركة.",
 
-  /* Music — place your file in assets/music/ and update the path */
   musicPath: "assets/music/romantic.mp3",
 
-  /* Gallery — local SVGs / images (lazy-loaded) */
   gallery: [
     { src: "assets/images/gallery-1.svg", alt: "لحظة رومانسية فاخرة", wide: true },
     { src: "assets/images/gallery-2.svg", alt: "تفاصيل ذهبية أنيقة" },
@@ -46,7 +39,6 @@ const CONFIG = {
     { src: "assets/images/gallery-6.svg", alt: "ذكرى جميلة" },
   ],
 
-  /* Timeline milestones */
   timeline: [
     {
       date: "اليوم",
@@ -70,8 +62,8 @@ const CONFIG = {
     },
   ],
 
-  /* RSVP */
   rsvpStorageKey: "engagement_rsvp_v1",
+  openedStorageKey: "engagement_opened_v1",
   rsvpThanksAttend: "سعداء بحضوركم! ننتظركم بفارغ الصبر.",
   rsvpThanksDecline: "نشكركم على الرد. نتمنى لكم كل الخير.",
 };
@@ -82,32 +74,75 @@ const CONFIG = {
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
-function pad(n) {
-  return String(n).padStart(2, "0");
+const pad = (n) => String(n).padStart(2, "0");
+
+const prefersReducedMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const hasGsap = () => typeof window.gsap !== "undefined";
+
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el && value != null) el.textContent = value;
 }
 
-function prefersReducedMotion() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function debounce(fn, wait = 150) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), wait);
+  };
+}
+
+function showToast(message, ms = 2800) {
+  const toast = $("#toast");
+  if (!toast) return;
+  toast.hidden = false;
+  toast.textContent = message;
+  requestAnimationFrame(() => toast.classList.add("is-visible"));
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => {
+    toast.classList.remove("is-visible");
+  }, ms);
+}
+
+function lockBodyScroll(lock) {
+  document.body.style.overflow = lock ? "hidden" : "";
+}
+
+function getFocusable(root) {
+  return $$(
+    'a[href], button:not([disabled]), input:not([disabled]), textarea, select, [tabindex]:not([tabindex="-1"])',
+    root
+  ).filter((el) => !el.hasAttribute("hidden") && el.offsetParent !== null);
+}
+
+function trapFocus(container, event) {
+  if (event.key !== "Tab") return;
+  const focusable = getFocusable(container);
+  if (!focusable.length) return;
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
 }
 
 /* --------------------------------------------------------------------------
-   Apply CONFIG to DOM
+   Apply CONFIG
    -------------------------------------------------------------------------- */
 function applyConfig() {
-  const setText = (id, value) => {
-    const el = document.getElementById(id);
-    if (el && value != null) el.textContent = value;
-  };
-
   setText("hero-title-ar", CONFIG.heroTitleAr);
   setText("hero-title-en", CONFIG.heroTitleEn);
   setText("hero-bride", CONFIG.brideShort);
   setText("hero-groom", CONFIG.groomShort);
   setText("hero-date", CONFIG.dateDisplay);
-
   setText("preview-bride", CONFIG.brideShort);
   setText("preview-groom", CONFIG.groomShort);
-
   setText("invite-verse", CONFIG.inviteVerse);
   setText("invite-message", CONFIG.inviteMessage);
   setText("invite-bride", CONFIG.brideName);
@@ -116,7 +151,6 @@ function applyConfig() {
   setText("invite-time", CONFIG.timeDisplay);
   setText("invite-venue", CONFIG.venue);
   setText("invite-closing", CONFIG.inviteClosing);
-
   setText("location-venue", CONFIG.venue);
   setText("quote-text", CONFIG.quoteText);
   setText("quote-author", CONFIG.quoteAuthor);
@@ -124,92 +158,153 @@ function applyConfig() {
   setText("thanks-names", `${CONFIG.brideShort} & ${CONFIG.groomShort}`);
 
   const maps = $("#maps-link");
-  if (maps) {
-    maps.href = CONFIG.mapsLink;
-  }
+  if (maps) maps.href = CONFIG.mapsLink;
 
   const audio = $("#bg-music");
-  if (audio) {
-    audio.src = CONFIG.musicPath;
-  }
+  if (audio) audio.src = CONFIG.musicPath;
 
   document.title = `${CONFIG.heroTitleAr} | ${CONFIG.brideShort} & ${CONFIG.groomShort}`;
+  setupCalendarLink();
+}
+
+function setupCalendarLink() {
+  const link = $("#calendar-link");
+  if (!link) return;
+
+  const start = new Date(CONFIG.eventDateTime);
+  if (Number.isNaN(start.getTime())) {
+    link.hidden = true;
+    return;
+  }
+
+  const end = new Date(start.getTime() + CONFIG.eventDurationHours * 60 * 60 * 1000);
+  const stamp = (d) =>
+    d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Engagement Invitation//AR",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    `UID:engagement-${CONFIG.dateGregorian}@invitation`,
+    `DTSTAMP:${stamp(new Date())}`,
+    `DTSTART:${stamp(start)}`,
+    `DTEND:${stamp(end)}`,
+    `SUMMARY:${CONFIG.heroTitleAr} — ${CONFIG.brideShort} & ${CONFIG.groomShort}`,
+    `DESCRIPTION:${CONFIG.inviteMessage}`,
+    `LOCATION:${CONFIG.venue}`,
+    `URL:${CONFIG.siteUrl}`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  link.href = URL.createObjectURL(blob);
+  link.download = "engagement.ics";
 }
 
 /* --------------------------------------------------------------------------
-   Gallery
+   Gallery + Lightbox
    -------------------------------------------------------------------------- */
 let galleryIndex = 0;
+let lightboxLastFocus = null;
 
 function buildGallery() {
   const grid = $("#gallery-grid");
   if (!grid) return;
 
-  grid.innerHTML = "";
+  const frag = document.createDocumentFragment();
+
   CONFIG.gallery.forEach((item, index) => {
     const btn = document.createElement("button");
     btn.type = "button";
-    btn.className = `gallery__item${item.wide ? " gallery__item--wide" : ""}`;
+    btn.className = `gallery__item reveal-on-scroll${item.wide ? " gallery__item--wide" : ""}`;
     btn.setAttribute("role", "listitem");
     btn.setAttribute("aria-label", `تكبير: ${item.alt}`);
     btn.dataset.index = String(index);
 
-    btn.innerHTML = `
-      <img src="${item.src}" alt="${item.alt}" loading="lazy" decoding="async" width="800" height="1000" />
-      <span class="gallery__overlay-icon" aria-hidden="true"><i class="fa-solid fa-expand"></i></span>
-    `;
+    const img = document.createElement("img");
+    img.src = item.src;
+    img.alt = item.alt;
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.width = item.wide ? 1200 : 800;
+    img.height = item.wide ? 750 : 1000;
 
+    const overlay = document.createElement("span");
+    overlay.className = "gallery__overlay-icon";
+    overlay.setAttribute("aria-hidden", "true");
+    overlay.innerHTML = '<svg class="icon"><use href="#i-expand"></use></svg>';
+
+    btn.append(img, overlay);
     btn.addEventListener("click", () => openLightbox(index));
-    grid.appendChild(btn);
+    frag.appendChild(btn);
   });
+
+  grid.replaceChildren(frag);
 }
 
 function openLightbox(index) {
   galleryIndex = index;
   const lb = $("#lightbox");
   const img = $("#lightbox-img");
+  const caption = $("#lightbox-caption");
   const item = CONFIG.gallery[index];
   if (!lb || !img || !item) return;
 
+  lightboxLastFocus = document.activeElement;
   img.src = item.src;
   img.alt = item.alt;
+  if (caption) caption.textContent = item.alt;
+
   lb.hidden = false;
-  document.body.style.overflow = "hidden";
+  lockBodyScroll(true);
   $("#lightbox-close")?.focus();
 
-  if (window.gsap && !prefersReducedMotion()) {
-    gsap.fromTo(img, { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.45, ease: "power2.out" });
+  if (hasGsap() && !prefersReducedMotion()) {
+    gsap.fromTo(img, { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" });
   }
 }
 
 function closeLightbox() {
   const lb = $("#lightbox");
-  if (!lb) return;
+  if (!lb || lb.hidden) return;
   lb.hidden = true;
-  document.body.style.overflow = "";
+  lockBodyScroll(false);
+  lightboxLastFocus?.focus?.();
+  lightboxLastFocus = null;
 }
 
 function stepLightbox(dir) {
   const len = CONFIG.gallery.length;
   galleryIndex = (galleryIndex + dir + len) % len;
-  openLightbox(galleryIndex);
+  const item = CONFIG.gallery[galleryIndex];
+  const img = $("#lightbox-img");
+  const caption = $("#lightbox-caption");
+  if (!item || !img) return;
+  img.src = item.src;
+  img.alt = item.alt;
+  if (caption) caption.textContent = item.alt;
 }
 
 function initLightbox() {
+  const lb = $("#lightbox");
   $("#lightbox-close")?.addEventListener("click", closeLightbox);
   $("#lightbox-prev")?.addEventListener("click", () => stepLightbox(-1));
   $("#lightbox-next")?.addEventListener("click", () => stepLightbox(1));
 
-  $("#lightbox")?.addEventListener("click", (e) => {
-    if (e.target.id === "lightbox") closeLightbox();
+  lb?.addEventListener("click", (e) => {
+    if (e.target === lb) closeLightbox();
   });
 
   document.addEventListener("keydown", (e) => {
-    const lb = $("#lightbox");
     if (!lb || lb.hidden) return;
     if (e.key === "Escape") closeLightbox();
     if (e.key === "ArrowLeft") stepLightbox(1);
     if (e.key === "ArrowRight") stepLightbox(-1);
+    trapFocus(lb, e);
   });
 }
 
@@ -220,56 +315,87 @@ function buildTimeline() {
   const list = $("#timeline-list");
   if (!list) return;
 
-  list.innerHTML = CONFIG.timeline
-    .map(
-      (item, i) => `
-    <li class="timeline__item" data-aos="fade-up" data-aos-delay="${i * 100}">
-      <span class="timeline__dot" aria-hidden="true"></span>
-      <div class="timeline__card">
-        <time class="timeline__date">${item.date}</time>
-        <h3 class="timeline__title">${item.title}</h3>
-        <p class="timeline__desc">${item.description}</p>
-      </div>
-    </li>
-  `
-    )
-    .join("");
+  const frag = document.createDocumentFragment();
+
+  CONFIG.timeline.forEach((item) => {
+    const li = document.createElement("li");
+    li.className = "timeline__item reveal-on-scroll";
+
+    const dot = document.createElement("span");
+    dot.className = "timeline__dot";
+    dot.setAttribute("aria-hidden", "true");
+
+    const card = document.createElement("div");
+    card.className = "timeline__card";
+
+    const date = document.createElement("span");
+    date.className = "timeline__date";
+    date.textContent = item.date;
+
+    const title = document.createElement("h3");
+    title.className = "timeline__title";
+    title.textContent = item.title;
+
+    const desc = document.createElement("p");
+    desc.className = "timeline__desc";
+    desc.textContent = item.description;
+
+    card.append(date, title, desc);
+    li.append(dot, card);
+    frag.appendChild(li);
+  });
+
+  list.replaceChildren(frag);
 }
 
 /* --------------------------------------------------------------------------
    Countdown
    -------------------------------------------------------------------------- */
+let countdownTimer = null;
+let lastAnnounceKey = "";
+
 function updateCountdown() {
   const target = new Date(CONFIG.eventDateTime).getTime();
-  const now = Date.now();
-  let diff = Math.max(0, target - now);
+  if (Number.isNaN(target)) return;
 
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  diff -= days * 1000 * 60 * 60 * 24;
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  diff -= hours * 1000 * 60 * 60;
-  const minutes = Math.floor(diff / (1000 * 60));
-  diff -= minutes * 1000 * 60;
-  const seconds = Math.floor(diff / 1000);
+  let diff = Math.max(0, target - Date.now());
+  const days = Math.floor(diff / 86400000);
+  diff -= days * 86400000;
+  const hours = Math.floor(diff / 3600000);
+  diff -= hours * 3600000;
+  const minutes = Math.floor(diff / 60000);
+  const seconds = Math.floor((diff - minutes * 60000) / 1000);
 
-  const set = (id, val) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = pad(val);
-  };
+  setText("cd-days", pad(days));
+  setText("cd-hours", pad(hours));
+  setText("cd-minutes", pad(minutes));
+  setText("cd-seconds", pad(seconds));
 
-  set("cd-days", days);
-  set("cd-hours", hours);
-  set("cd-minutes", minutes);
-  set("cd-seconds", seconds);
+  /* Announce every minute only — avoid SR spam */
+  const live = $("#countdown-live");
+  const key = `${days}-${hours}-${minutes}`;
+  if (live && key !== lastAnnounceKey) {
+    lastAnnounceKey = key;
+    live.textContent = `متبقي ${days} يوم و ${hours} ساعة و ${minutes} دقيقة`;
+  }
 }
 
 function initCountdown() {
   updateCountdown();
-  setInterval(updateCountdown, 1000);
+  countdownTimer = window.setInterval(updateCountdown, 1000);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+    } else if (!countdownTimer) {
+      updateCountdown();
+      countdownTimer = window.setInterval(updateCountdown, 1000);
+    }
+  });
 }
 
 /* --------------------------------------------------------------------------
-   Music player (no autoplay)
+   Music
    -------------------------------------------------------------------------- */
 function initMusic() {
   const audio = $("#bg-music");
@@ -297,18 +423,25 @@ function initMusic() {
     } catch {
       playing = false;
       syncUI();
-      btn.setAttribute("aria-label", "تعذر تشغيل الموسيقى — أضف ملفًا في assets/music");
+      showToast("تعذر تشغيل الموسيقى. أضف ملفًا في assets/music");
     }
   });
 
-  audio.addEventListener("ended", () => {
-    playing = false;
+  audio.addEventListener("pause", () => {
+    if (!audio.ended) {
+      playing = false;
+      syncUI();
+    }
+  });
+
+  audio.addEventListener("play", () => {
+    playing = true;
     syncUI();
   });
 }
 
 /* --------------------------------------------------------------------------
-   RSVP + LocalStorage
+   RSVP
    -------------------------------------------------------------------------- */
 function initRSVP() {
   const form = $("#rsvp-form");
@@ -319,81 +452,106 @@ function initRSVP() {
 
   const showThanks = (attending, name) => {
     if (form) form.hidden = true;
-    if (thanks) thanks.hidden = false;
+    if (thanks) {
+      thanks.hidden = false;
+      thanks.focus();
+    }
     if (title) title.textContent = attending ? "نتطلع لرؤيتكم" : "شكرًا لردّكم";
     if (msg) {
       const base = attending ? CONFIG.rsvpThanksAttend : CONFIG.rsvpThanksDecline;
       msg.textContent = name ? `${name}، ${base}` : base;
     }
 
-    if (window.gsap && !prefersReducedMotion()) {
+    if (hasGsap() && !prefersReducedMotion() && thanks) {
       gsap.fromTo(
         thanks,
-        { opacity: 0, scale: 0.9, filter: "blur(8px)" },
-        { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.7, ease: "power3.out" }
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.55, ease: "power3.out" }
       );
     }
   };
 
-  const saved = localStorage.getItem(CONFIG.rsvpStorageKey);
-  if (saved) {
-    try {
+  try {
+    const saved = localStorage.getItem(CONFIG.rsvpStorageKey);
+    if (saved) {
       const data = JSON.parse(saved);
-      showThanks(data.attending, data.name);
-    } catch {
-      /* ignore corrupt storage */
+      if (typeof data.attending === "boolean") {
+        showThanks(data.attending, data.name || "");
+      }
     }
+  } catch {
+    /* ignore */
   }
 
   const save = (attending) => {
-    const name = (nameInput?.value || "").trim();
-    const payload = {
-      attending,
-      name,
-      savedAt: new Date().toISOString(),
-    };
-    localStorage.setItem(CONFIG.rsvpStorageKey, JSON.stringify(payload));
+    const name = (nameInput?.value || "").trim().slice(0, 60);
+    try {
+      localStorage.setItem(
+        CONFIG.rsvpStorageKey,
+        JSON.stringify({ attending, name, savedAt: new Date().toISOString() })
+      );
+    } catch {
+      showToast("تعذر حفظ الرد على هذا الجهاز");
+    }
     showThanks(attending, name);
-    if (attending) burstConfetti(40);
+    if (attending) burstConfetti(36);
   };
 
   $("#rsvp-yes")?.addEventListener("click", () => save(true));
   $("#rsvp-no")?.addEventListener("click", () => save(false));
+
+  nameInput?.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      save(true);
+    }
+  });
 }
 
 /* --------------------------------------------------------------------------
-   Particles
+   Particles (DPR-aware, paused when hidden / reduced motion)
    -------------------------------------------------------------------------- */
 function initParticles() {
   const canvas = $("#particles");
   if (!canvas || prefersReducedMotion()) return;
 
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext("2d", { alpha: true });
+  if (!ctx) return;
+
   let w = 0;
   let h = 0;
+  let dpr = 1;
   let particles = [];
   let mouse = { x: null, y: null };
   let raf = 0;
+  let running = true;
 
   const resize = () => {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-  };
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  const create = () => {
-    const count = Math.min(70, Math.floor((w * h) / 22000));
+    const density = w < 640 ? 38000 : 24000;
+    const count = Math.min(w < 640 ? 28 : 55, Math.floor((w * h) / density));
     particles = Array.from({ length: count }, () => ({
       x: Math.random() * w,
       y: Math.random() * h,
-      r: Math.random() * 1.8 + 0.4,
-      vx: (Math.random() - 0.5) * 0.25,
-      vy: (Math.random() - 0.5) * 0.25,
-      a: Math.random() * 0.45 + 0.15,
+      r: Math.random() * 1.6 + 0.35,
+      vx: (Math.random() - 0.5) * 0.22,
+      vy: (Math.random() - 0.5) * 0.22,
+      a: Math.random() * 0.4 + 0.12,
     }));
   };
 
   const draw = () => {
+    if (!running) return;
     ctx.clearRect(0, 0, w, h);
+
     for (const p of particles) {
       p.x += p.vx;
       p.y += p.vy;
@@ -402,9 +560,9 @@ function initParticles() {
         const dx = mouse.x - p.x;
         const dy = mouse.y - p.y;
         const dist = Math.hypot(dx, dy);
-        if (dist < 120) {
-          p.x -= dx * 0.01;
-          p.y -= dy * 0.01;
+        if (dist < 110) {
+          p.x -= dx * 0.008;
+          p.y -= dy * 0.008;
         }
       }
 
@@ -418,18 +576,25 @@ function initParticles() {
       ctx.fillStyle = `rgba(212, 175, 55, ${p.a})`;
       ctx.fill();
     }
+
     raf = requestAnimationFrame(draw);
   };
 
+  const start = () => {
+    if (running) return;
+    running = true;
+    raf = requestAnimationFrame(draw);
+  };
+
+  const stop = () => {
+    running = false;
+    cancelAnimationFrame(raf);
+  };
+
   resize();
-  create();
   draw();
 
-  window.addEventListener("resize", () => {
-    resize();
-    create();
-  });
-
+  window.addEventListener("resize", debounce(resize, 200));
   window.addEventListener(
     "pointermove",
     (e) => {
@@ -440,28 +605,39 @@ function initParticles() {
   );
 
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden) cancelAnimationFrame(raf);
-    else raf = requestAnimationFrame(draw);
+    if (document.hidden) stop();
+    else start();
   });
 }
 
 /* --------------------------------------------------------------------------
    Confetti
    -------------------------------------------------------------------------- */
+let confettiRaf = 0;
+
 function burstConfetti(amount = 80) {
   const canvas = $("#confetti");
   if (!canvas || prefersReducedMotion()) return;
 
   const ctx = canvas.getContext("2d");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  if (!ctx) return;
+
+  cancelAnimationFrame(confettiRaf);
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  canvas.width = Math.floor(w * dpr);
+  canvas.height = Math.floor(h * dpr);
+  canvas.style.width = `${w}px`;
+  canvas.style.height = `${h}px`;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
   const colors = ["#D4AF37", "#F5E6A3", "#FFFFFF", "#8B6914", "#E8D48B"];
   const pieces = Array.from({ length: amount }, () => ({
-    x: canvas.width / 2 + (Math.random() - 0.5) * 80,
-    y: canvas.height * 0.35,
-    w: Math.random() * 8 + 4,
-    h: Math.random() * 6 + 3,
+    x: w / 2 + (Math.random() - 0.5) * 80,
+    y: h * 0.35,
+    ww: Math.random() * 8 + 4,
+    hh: Math.random() * 6 + 3,
     color: colors[(Math.random() * colors.length) | 0],
     vx: (Math.random() - 0.5) * 14,
     vy: Math.random() * -12 - 4,
@@ -470,9 +646,8 @@ function burstConfetti(amount = 80) {
     life: 1,
   }));
 
-  let raf = 0;
   const tick = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, w, h);
     let alive = false;
 
     for (const p of pieces) {
@@ -480,7 +655,7 @@ function burstConfetti(amount = 80) {
       p.x += p.vx;
       p.y += p.vy;
       p.rot += p.vr;
-      p.life -= 0.008;
+      p.life -= 0.01;
       if (p.life <= 0) continue;
       alive = true;
       ctx.save();
@@ -488,15 +663,14 @@ function burstConfetti(amount = 80) {
       ctx.rotate(p.rot);
       ctx.globalAlpha = Math.max(0, p.life);
       ctx.fillStyle = p.color;
-      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.fillRect(-p.ww / 2, -p.hh / 2, p.ww, p.hh);
       ctx.restore();
     }
 
-    if (alive) raf = requestAnimationFrame(tick);
-    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (alive) confettiRaf = requestAnimationFrame(tick);
+    else ctx.clearRect(0, 0, w, h);
   };
 
-  cancelAnimationFrame(raf);
   tick();
 }
 
@@ -507,80 +681,93 @@ function initLoader() {
   return new Promise((resolve) => {
     const loader = $("#loader");
     const fill = $(".loader__bar-fill");
-    const reduced = prefersReducedMotion();
+    const bar = $("#loader-bar");
 
-    if (!loader) {
-      resolve();
-      return;
-    }
-
-    if (reduced) {
+    const finish = () => {
+      if (!loader) {
+        resolve();
+        return;
+      }
       loader.classList.add("is-done");
+      loader.setAttribute("aria-busy", "false");
+      loader.setAttribute("aria-hidden", "true");
       resolve();
+    };
+
+    if (!loader || prefersReducedMotion()) {
+      finish();
       return;
     }
 
-    if (window.gsap && fill) {
+    if (hasGsap() && fill) {
       const tl = gsap.timeline({
         onComplete: () => {
           gsap.to(loader, {
             opacity: 0,
-            duration: 0.7,
+            duration: 0.55,
             ease: "power2.inOut",
-            onComplete: () => {
-              loader.classList.add("is-done");
-              resolve();
-            },
+            onComplete: finish,
           });
         },
       });
 
-      tl.to(fill, { width: "100%", duration: 1.6, ease: "power2.inOut" });
-      tl.to(".loader__monogram", { scale: 1.15, duration: 0.4, yoyo: true, repeat: 1 }, 0.8);
+      tl.to(fill, {
+        width: "100%",
+        duration: 1.25,
+        ease: "power2.inOut",
+        onUpdate() {
+          if (bar) bar.setAttribute("aria-valuenow", String(Math.round(this.progress() * 100)));
+        },
+      });
+      tl.to(".loader__monogram", { scale: 1.12, duration: 0.35, yoyo: true, repeat: 1 }, 0.6);
     } else {
-      setTimeout(() => {
-        loader.classList.add("is-done");
-        resolve();
-      }, 1200);
+      if (fill) fill.style.width = "100%";
+      setTimeout(finish, 700);
     }
   });
 }
 
 /* --------------------------------------------------------------------------
-   Hero intro animations
+   Hero animations
    -------------------------------------------------------------------------- */
 function animateHero() {
-  if (!window.gsap || prefersReducedMotion()) return;
+  if (!hasGsap() || prefersReducedMotion()) return;
 
   const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-  tl.from(".hero__eyebrow", { y: 30, opacity: 0, filter: "blur(6px)", duration: 0.9 })
-    .from(".hero__title-line", { y: 50, opacity: 0, scale: 0.96, duration: 1 }, "-=0.5")
-    .from(".hero__title-en", { y: 20, opacity: 0, duration: 0.7 }, "-=0.55")
-    .from(".hero__name", { y: 24, opacity: 0, stagger: 0.15, duration: 0.7 }, "-=0.4")
-    .from(".hero__ampersand", { scale: 0, opacity: 0, duration: 0.5 }, "-=0.5")
-    .from(".hero__date", { opacity: 0, y: 16, duration: 0.6 }, "-=0.35")
-    .from("#btn-open", { opacity: 0, y: 24, scale: 0.95, duration: 0.7 }, "-=0.3");
-
-  gsap.to(".hero__glow", {
-    scale: 1.15,
-    opacity: 0.7,
-    duration: 4,
-    yoyo: true,
-    repeat: -1,
-    ease: "sine.inOut",
-  });
+  tl.from(".hero__eyebrow", { y: 24, opacity: 0, duration: 0.7 })
+    .from(".hero__title-line", { y: 40, opacity: 0, duration: 0.85 }, "-=0.4")
+    .from(".hero__title-en", { y: 16, opacity: 0, duration: 0.55 }, "-=0.45")
+    .from(".hero__name", { y: 20, opacity: 0, stagger: 0.12, duration: 0.55 }, "-=0.3")
+    .from(".hero__ampersand", { scale: 0.6, opacity: 0, duration: 0.4 }, "-=0.4")
+    .from(".hero__date", { opacity: 0, y: 12, duration: 0.45 }, "-=0.25")
+    .from("#btn-open", { opacity: 0, y: 18, duration: 0.55 }, "-=0.2");
 }
 
 /* --------------------------------------------------------------------------
-   Envelope open sequence
+   Envelope
    -------------------------------------------------------------------------- */
 let invitationRevealed = false;
+let envelopeAnimating = false;
 
 function revealContentSections() {
   if (invitationRevealed) return;
   invitationRevealed = true;
   document.body.classList.remove("is-invitation-locked");
-  if (window.AOS) AOS.refresh();
+
+  const scrollHint = $("#hero-scroll");
+  if (scrollHint) scrollHint.hidden = false;
+
+  try {
+    sessionStorage.setItem(CONFIG.openedStorageKey, "1");
+  } catch {
+    /* ignore */
+  }
+
+  observeReveals();
+
+  if (hasGsap() && window.ScrollTrigger) {
+    ScrollTrigger.refresh();
+  }
 }
 
 function initEnvelope() {
@@ -593,19 +780,53 @@ function initEnvelope() {
 
   if (!btn || !section) return;
 
+  /* Restore open state within session */
+  try {
+    if (sessionStorage.getItem(CONFIG.openedStorageKey) === "1") {
+      revealContentSections();
+      btn.hidden = true;
+      return;
+    }
+  } catch {
+    /* ignore */
+  }
+
   document.body.classList.add("is-invitation-locked");
 
-  btn.addEventListener("click", () => {
-    section.hidden = false;
-    section.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
+  const finishOpen = () => {
+    section.hidden = true;
+    section.style.opacity = "";
+    lockBodyScroll(false);
+    btn.hidden = true;
+    revealContentSections();
+    burstConfetti(72);
+    $("#invitation")?.scrollIntoView({
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+      block: "start",
+    });
 
-    if (!window.gsap || prefersReducedMotion()) {
-      section.hidden = true;
-      document.body.style.overflow = "";
-      revealContentSections();
-      $("#invitation")?.scrollIntoView({ behavior: "smooth" });
-      burstConfetti(60);
+    if (hasGsap() && !prefersReducedMotion()) {
+      gsap.from("#invitation .invite", {
+        opacity: 0,
+        y: 48,
+        duration: 0.9,
+        ease: "power3.out",
+      });
+    }
+
+    envelopeAnimating = false;
+  };
+
+  btn.addEventListener("click", () => {
+    if (envelopeAnimating || invitationRevealed) return;
+    envelopeAnimating = true;
+    btn.disabled = true;
+
+    section.hidden = false;
+    lockBodyScroll(true);
+
+    if (!hasGsap() || prefersReducedMotion()) {
+      finishOpen();
       return;
     }
 
@@ -614,114 +835,86 @@ function initEnvelope() {
       onComplete: () => {
         gsap.to(section, {
           opacity: 0,
-          duration: 0.6,
-          onComplete: () => {
-            section.hidden = true;
-            section.style.opacity = "";
-            document.body.style.overflow = "";
-            revealContentSections();
-            burstConfetti(90);
-            $("#invitation")?.scrollIntoView({ behavior: "smooth" });
-
-            gsap.from("#invitation .invite", {
-              opacity: 0,
-              y: 60,
-              scale: 0.94,
-              filter: "blur(10px)",
-              duration: 1.1,
-              ease: "power3.out",
-            });
-          },
+          duration: 0.5,
+          onComplete: finishOpen,
         });
       },
     });
 
     gsap.set(section, { opacity: 0 });
-    tl.to(section, { opacity: 1, duration: 0.4 })
-      .from(envelope, { scale: 0.7, rotateX: 25, opacity: 0, duration: 0.7 }, 0)
-      .to(seal, { scale: 0, opacity: 0, duration: 0.35 }, "+=0.25")
-      .to(flap, { rotateX: -170, duration: 0.85, transformOrigin: "top center" }, "-=0.1")
-      .to(
-        card,
-        {
-          y: -160,
-          scale: 1.08,
-          duration: 0.9,
-          ease: "power2.out",
-        },
-        "-=0.35"
-      )
-      .to(card, { opacity: 0, scale: 1.2, duration: 0.45 }, "+=0.15");
+    tl.to(section, { opacity: 1, duration: 0.35 })
+      .from(envelope, { scale: 0.75, rotateX: 18, opacity: 0, duration: 0.65 }, 0)
+      .to(seal, { scale: 0, opacity: 0, duration: 0.3 }, "+=0.2")
+      .to(flap, { rotateX: -160, duration: 0.8, transformOrigin: "top center" }, "-=0.05")
+      .to(card, { y: -150, scale: 1.06, duration: 0.8, ease: "power2.out" }, "-=0.3")
+      .to(card, { opacity: 0, scale: 1.15, duration: 0.4 }, "+=0.1");
   });
 }
 
 /* --------------------------------------------------------------------------
-   Scroll animations (GSAP ScrollTrigger + AOS)
+   Scroll reveals + GSAP polish
    -------------------------------------------------------------------------- */
-function initScrollAnimations() {
-  if (window.AOS) {
-    AOS.init({
-      duration: 900,
-      easing: "ease-out-cubic",
-      once: true,
-      offset: 80,
-      disable: prefersReducedMotion(),
-    });
+let revealObserver = null;
+
+function observeReveals() {
+  const els = $$(".reveal-on-scroll:not(.is-visible)");
+  if (!els.length) return;
+
+  if (prefersReducedMotion()) {
+    els.forEach((el) => el.classList.add("is-visible"));
+    return;
   }
 
-  if (!window.gsap || !window.ScrollTrigger || prefersReducedMotion()) return;
+  if (!("IntersectionObserver" in window)) {
+    els.forEach((el) => el.classList.add("is-visible"));
+    return;
+  }
+
+  revealObserver?.disconnect();
+  revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        revealObserver.unobserve(entry.target);
+      });
+    },
+    { rootMargin: "0px 0px -8% 0px", threshold: 0.12 }
+  );
+
+  els.forEach((el) => revealObserver.observe(el));
+}
+
+function initScrollAnimations() {
+  if (!hasGsap() || !window.ScrollTrigger || prefersReducedMotion()) {
+    observeReveals();
+    return;
+  }
 
   gsap.registerPlugin(ScrollTrigger);
 
-  gsap.utils.toArray(".countdown__unit").forEach((el, i) => {
-    gsap.from(el, {
-      scrollTrigger: { trigger: el, start: "top 85%" },
-      y: 40,
-      opacity: 0,
-      duration: 0.7,
-      delay: i * 0.08,
-      ease: "power2.out",
-    });
-  });
-
-  gsap.from(".quote__text", {
-    scrollTrigger: { trigger: "#quote", start: "top 75%" },
-    opacity: 0,
-    y: 30,
-    filter: "blur(8px)",
-    duration: 1.1,
-    ease: "power3.out",
-  });
-
-  gsap.from(".thanks__ornament", {
-    scrollTrigger: { trigger: "#thanks", start: "top 80%" },
-    scale: 0.5,
-    opacity: 0,
-    duration: 1,
-    ease: "back.out(1.6)",
-  });
-
-  /* Parallax ambient orbs */
   gsap.to(".ambient__orb--1", {
-    scrollTrigger: { scrub: 1 },
-    y: 120,
+    y: 100,
     ease: "none",
+    scrollTrigger: { scrub: 1 },
   });
 
   gsap.to(".ambient__orb--2", {
-    scrollTrigger: { scrub: 1 },
-    y: -80,
+    y: -70,
     ease: "none",
+    scrollTrigger: { scrub: 1 },
   });
+
+  observeReveals();
 }
 
-/* --------------------------------------------------------------------------
-   Mouse parallax on hero names
-   -------------------------------------------------------------------------- */
 function initMouseParallax() {
-  if (prefersReducedMotion()) return;
+  if (prefersReducedMotion() || !hasGsap() || window.matchMedia("(pointer: coarse)").matches) {
+    return;
+  }
+
   const hero = $("#hero");
-  if (!hero || !window.gsap) return;
+  if (!hero) return;
 
   hero.addEventListener(
     "pointermove",
@@ -729,42 +922,39 @@ function initMouseParallax() {
       const rect = hero.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
-      gsap.to(".hero__names", {
-        x: x * 18,
-        y: y * 12,
-        duration: 0.8,
-        ease: "power2.out",
-      });
-      gsap.to(".hero__title-line", {
-        x: x * 10,
-        y: y * 6,
-        duration: 1,
-        ease: "power2.out",
-      });
+      gsap.to(".hero__names", { x: x * 14, y: y * 10, duration: 0.7, ease: "power2.out" });
+      gsap.to(".hero__title-line", { x: x * 8, y: y * 5, duration: 0.9, ease: "power2.out" });
     },
     { passive: true }
   );
 }
 
 /* --------------------------------------------------------------------------
-   Smooth anchor scrolling enhancement
+   Boot — wait for deferred GSAP if needed
    -------------------------------------------------------------------------- */
-function initSmoothAnchors() {
-  $$('a[href^="#"]').forEach((a) => {
-    a.addEventListener("click", (e) => {
-      const id = a.getAttribute("href");
-      if (!id || id === "#") return;
-      const target = document.querySelector(id);
-      if (!target) return;
-      e.preventDefault();
-      target.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
-    });
+function whenReady(fn) {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", fn, { once: true });
+  } else {
+    fn();
+  }
+}
+
+function waitForGsap(timeout = 2500) {
+  return new Promise((resolve) => {
+    if (hasGsap()) {
+      resolve();
+      return;
+    }
+    const start = Date.now();
+    const tick = () => {
+      if (hasGsap() || Date.now() - start > timeout) resolve();
+      else requestAnimationFrame(tick);
+    };
+    tick();
   });
 }
 
-/* --------------------------------------------------------------------------
-   Boot
-   -------------------------------------------------------------------------- */
 async function boot() {
   applyConfig();
   buildGallery();
@@ -775,16 +965,12 @@ async function boot() {
   initRSVP();
   initParticles();
   initEnvelope();
-  initSmoothAnchors();
   initMouseParallax();
 
+  await waitForGsap();
   await initLoader();
   animateHero();
   initScrollAnimations();
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", boot);
-} else {
-  boot();
-}
+whenReady(boot);

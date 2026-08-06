@@ -36,15 +36,14 @@ Everything editable lives in one **`CONFIG`** object at the top of `script.js`.
 
 | Layer | Stack |
 |--------|--------|
-| Markup | HTML5 |
-| Styles | CSS3 (custom properties, glassmorphism, gradients) |
+| Markup | HTML5 (semantic, accessible) |
+| Styles | CSS3 (custom properties, glassmorphism) |
 | Logic | Vanilla JavaScript (ES6+) |
 | Motion | [GSAP](https://gsap.com/) + ScrollTrigger |
-| Scroll FX | [AOS](https://michalsnik.github.io/aos/) |
-| Icons | [Font Awesome 6](https://fontawesome.com/) |
-| Fonts | Google Fonts — **Cairo** (Arabic), **Poppins** (English) |
+| Icons | Inline SVG sprite (no icon CDN) |
+| Fonts | Google Fonts — **Cairo**, **Poppins** |
 
-No Bootstrap, React, Tailwind, or build tools required.
+No Bootstrap, React, Tailwind, Font Awesome, or AOS — fewer dependencies, faster loads.
 
 ---
 

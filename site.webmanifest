@@ -1,11 +1,13 @@
 {
-  "name": "دعوة خطوبة — Engagement Invitation",
-  "short_name": "Invitation",
-  "description": "A luxury digital engagement invitation",
-  "start_url": "/",
+  "name": "دعوة خطوبة — سارة وأحمد",
+  "short_name": "خطوبة",
+  "description": "دعوة خطوبة رقمية فاخرة",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#090909",
-  "theme_color": "#D4AF37",
+  "theme_color": "#090909",
   "lang": "ar",
   "dir": "rtl",
   "icons": [
@@ -13,7 +15,13 @@
       "src": "assets/icons/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     }
   ]
 }

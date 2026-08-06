@@ -1,37 +1,37 @@
 /* ==========================================================================
-   Luxury Engagement Invitation — Styles
-   Dark · Glass · Gold accents · Arabic-first
+   Luxury Engagement Invitation — Production Styles
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   CSS Variables
-   -------------------------------------------------------------------------- */
 :root {
   --bg: #090909;
-  --bg-elevated: #111111;
   --card: rgba(255, 255, 255, 0.08);
-  --card-strong: rgba(255, 255, 255, 0.12);
   --accent: #d4af37;
   --accent-soft: #f5e6a3;
   --accent-deep: #8b6914;
   --text: #ffffff;
   --text-secondary: #cfcfcf;
-  --text-muted: #8a8a8a;
+  --text-muted: #9a9a9a;
   --border-gold: rgba(212, 175, 55, 0.45);
   --shadow-soft: 0 20px 60px rgba(0, 0, 0, 0.55);
   --shadow-glow: 0 0 40px rgba(212, 175, 55, 0.18);
   --radius: 20px;
   --radius-sm: 12px;
-  --font-ar: "Cairo", sans-serif;
-  --font-en: "Poppins", sans-serif;
+  --font-ar: "Cairo", "Segoe UI", Tahoma, sans-serif;
+  --font-en: "Poppins", "Segoe UI", sans-serif;
   --container: min(1100px, calc(100% - 2.5rem));
   --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
-  --header-space: 0;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --z-ambient: 0;
+  --z-main: 2;
+  --z-music: 7000;
+  --z-envelope: 8000;
+  --z-confetti: 9000;
+  --z-lightbox: 9500;
+  --z-loader: 9999;
+  --z-toast: 10000;
 }
 
-/* --------------------------------------------------------------------------
-   Reset & Base
-   -------------------------------------------------------------------------- */
 *,
 *::before,
 *::after {
@@ -43,6 +43,13 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
@@ -52,7 +59,10 @@ body {
   line-height: 1.7;
   overflow-x: hidden;
   min-height: 100vh;
+  min-height: 100dvh;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 img {
@@ -62,14 +72,60 @@ img {
 }
 
 button,
-a {
+a,
+input {
   font-family: inherit;
+}
+
+button {
   cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
 }
 
 ul,
 ol {
   list-style: none;
+}
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.icon-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.icon {
+  width: 1.15em;
+  height: 1.15em;
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
+  fill: currentColor;
+}
+
+.icon--sm {
+  width: 0.95em;
+  height: 0.95em;
+}
+
+.icon--xl {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.icon--flip {
+  transform: scaleX(-1);
 }
 
 .sr-only {
@@ -88,17 +144,17 @@ ol {
   position: absolute;
   top: -100px;
   right: 1rem;
-  z-index: 10000;
+  z-index: var(--z-toast);
   background: var(--accent);
-  color: #111;
+  color: #1a1408;
   padding: 0.75rem 1.25rem;
   border-radius: 8px;
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
 }
 
 .skip-link:focus {
-  top: 1rem;
+  top: max(1rem, env(safe-area-inset-top));
 }
 
 .container {
@@ -107,14 +163,15 @@ ol {
 }
 
 /* --------------------------------------------------------------------------
-   Ambient background orbs
+   Ambient / canvas layers
    -------------------------------------------------------------------------- */
 .ambient {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: var(--z-ambient);
   overflow: hidden;
+  contain: strict;
 }
 
 .ambient__orb {
@@ -122,20 +179,21 @@ ol {
   border-radius: 50%;
   filter: blur(80px);
   opacity: 0.35;
+  will-change: transform;
   animation: orbFloat 18s var(--ease-lux) infinite alternate;
 }
 
 .ambient__orb--1 {
-  width: 420px;
-  height: 420px;
+  width: min(420px, 70vw);
+  height: min(420px, 70vw);
   background: radial-gradient(circle, rgba(212, 175, 55, 0.35), transparent 70%);
   top: -10%;
   right: -5%;
 }
 
 .ambient__orb--2 {
-  width: 360px;
-  height: 360px;
+  width: min(360px, 60vw);
+  height: min(360px, 60vw);
   background: radial-gradient(circle, rgba(212, 175, 55, 0.2), transparent 70%);
   bottom: 10%;
   left: -8%;
@@ -143,8 +201,8 @@ ol {
 }
 
 .ambient__orb--3 {
-  width: 280px;
-  height: 280px;
+  width: min(280px, 50vw);
+  height: min(280px, 50vw);
   background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 70%);
   top: 45%;
   left: 40%;
@@ -153,66 +211,66 @@ ol {
 
 @keyframes orbFloat {
   from {
-    transform: translate(0, 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
   to {
-    transform: translate(40px, 60px) scale(1.12);
+    transform: translate3d(40px, 60px, 0) scale(1.12);
   }
 }
 
-.particles {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
-
+.particles,
 .confetti-canvas {
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 9000;
+}
+
+.particles {
+  z-index: 1;
+}
+
+.confetti-canvas {
+  z-index: var(--z-confetti);
 }
 
 main {
   position: relative;
-  z-index: 2;
+  z-index: var(--z-main);
 }
 
-/* Content locked until invitation is opened */
+/* Gated content until invitation opens */
 body.is-invitation-locked .invite-gated {
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  padding-top: 0;
-  padding-bottom: 0;
-  pointer-events: none;
-  visibility: hidden;
+  display: none;
 }
 
 body:not(.is-invitation-locked) .invite-gated {
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.8s var(--ease-lux);
+  animation: sectionIn 0.9s var(--ease-lux) both;
+}
+
+@keyframes sectionIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* --------------------------------------------------------------------------
-   1. Loader
+   Loader
    -------------------------------------------------------------------------- */
 .loader {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: var(--z-loader);
   display: grid;
   place-items: center;
   background:
     radial-gradient(ellipse at 50% 30%, rgba(212, 175, 55, 0.12), transparent 55%),
     var(--bg);
-  transition: opacity 0.8s var(--ease-lux), visibility 0.8s;
+  transition: opacity 0.7s var(--ease-lux), visibility 0.7s;
 }
 
 .loader.is-done {
@@ -221,29 +279,24 @@ body:not(.is-invitation-locked) .invite-gated {
   pointer-events: none;
 }
 
-.loader__inner {
-  text-align: center;
+.loader__rings {
   position: relative;
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 1.5rem;
 }
 
 .loader__ring {
-  width: 90px;
-  height: 90px;
+  position: absolute;
+  inset: 0;
   border: 1px solid rgba(212, 175, 55, 0.25);
   border-top-color: var(--accent);
   border-radius: 50%;
-  margin: 0 auto 1.5rem;
   animation: spin 1.4s linear infinite;
 }
 
-.loader__ring--delay {
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 74px;
-  height: 74px;
-  margin: 0;
+.loader__ring--inner {
+  inset: 8px;
   border-top-color: var(--accent-soft);
   animation-duration: 2s;
   animation-direction: reverse;
@@ -251,9 +304,9 @@ body:not(.is-invitation-locked) .invite-gated {
 
 .loader__monogram {
   position: absolute;
-  top: 28px;
-  left: 50%;
-  transform: translateX(-50%);
+  inset: 0;
+  display: grid;
+  place-items: center;
   font-size: 1.5rem;
   color: var(--accent);
   animation: pulseGlow 2s ease-in-out infinite;
@@ -261,9 +314,9 @@ body:not(.is-invitation-locked) .invite-gated {
 
 .loader__text {
   color: var(--text-secondary);
-  font-weight: 400;
   letter-spacing: 0.08em;
   margin-bottom: 1.25rem;
+  text-align: center;
 }
 
 .loader__bar {
@@ -280,7 +333,7 @@ body:not(.is-invitation-locked) .invite-gated {
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg, var(--accent-deep), var(--accent), var(--accent-soft));
-  border-radius: 2px;
+  transform-origin: right center;
 }
 
 @keyframes spin {
@@ -313,16 +366,23 @@ body:not(.is-invitation-locked) .invite-gated {
   border: 1px solid transparent;
   border-radius: 999px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
-  transition: transform 0.35s var(--ease-lux), box-shadow 0.35s, background 0.35s, border-color 0.35s, color 0.35s;
-  position: relative;
-  overflow: hidden;
+  line-height: 1.2;
+  transition:
+    transform 0.35s var(--ease-lux),
+    box-shadow 0.35s,
+    background 0.35s,
+    border-color 0.35s,
+    color 0.35s,
+    opacity 0.35s;
+  min-height: 48px;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
+.btn:disabled {
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 .btn--gold {
@@ -331,9 +391,11 @@ body:not(.is-invitation-locked) .invite-gated {
   box-shadow: var(--shadow-glow), 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
-.btn--gold:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 0 50px rgba(212, 175, 55, 0.35), 0 12px 32px rgba(0, 0, 0, 0.4);
+.btn--ghost {
+  margin-top: 1.25rem;
+  background: transparent;
+  border-color: rgba(212, 175, 55, 0.4);
+  color: var(--accent-soft);
 }
 
 .btn--attend {
@@ -341,11 +403,7 @@ body:not(.is-invitation-locked) .invite-gated {
   border-color: rgba(46, 160, 90, 0.45);
   color: #8fefb0;
   flex: 1;
-}
-
-.btn--attend:hover {
-  background: rgba(46, 160, 90, 0.28);
-  transform: translateY(-2px);
+  min-width: 140px;
 }
 
 .btn--decline {
@@ -353,19 +411,42 @@ body:not(.is-invitation-locked) .invite-gated {
   border-color: rgba(200, 70, 70, 0.4);
   color: #ffb4b4;
   flex: 1;
+  min-width: 140px;
 }
 
-.btn--decline:hover {
-  background: rgba(200, 70, 70, 0.22);
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .btn--gold:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 0 50px rgba(212, 175, 55, 0.35), 0 12px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .btn--ghost:hover {
+    background: rgba(212, 175, 55, 0.1);
+  }
+
+  .btn--attend:hover {
+    background: rgba(46, 160, 90, 0.28);
+    transform: translateY(-2px);
+  }
+
+  .btn--decline:hover {
+    background: rgba(200, 70, 70, 0.22);
+    transform: translateY(-2px);
+  }
+}
+
+.btn:active {
+  transform: scale(0.98);
 }
 
 /* --------------------------------------------------------------------------
-   Section shared
+   Sections
    -------------------------------------------------------------------------- */
 .section {
   padding: clamp(4rem, 10vw, 7.5rem) 0;
   position: relative;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
 }
 
 .section__header {
@@ -376,15 +457,14 @@ body:not(.is-invitation-locked) .invite-gated {
 .section__eyebrow {
   color: var(--accent);
   font-size: 0.9rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.2em;
   margin-bottom: 0.75rem;
-  text-transform: uppercase;
 }
 
 .section__title {
   font-size: clamp(1.85rem, 4vw, 2.75rem);
-  font-weight: 700;
+  font-weight: 800;
   background: linear-gradient(180deg, #fff 20%, var(--accent-soft));
   -webkit-background-clip: text;
   background-clip: text;
@@ -401,12 +481,22 @@ body:not(.is-invitation-locked) .invite-gated {
   text-align: center;
   color: var(--accent);
   opacity: 0.5;
-  font-size: 1rem;
   margin-bottom: 0.5rem;
 }
 
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s var(--ease-lux), transform 0.8s var(--ease-lux);
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
 /* --------------------------------------------------------------------------
-   2. Hero
+   Hero
    -------------------------------------------------------------------------- */
 .hero {
   min-height: 100vh;
@@ -425,8 +515,8 @@ body:not(.is-invitation-locked) .invite-gated {
 
 .hero__glow {
   position: absolute;
-  width: 500px;
-  height: 500px;
+  width: min(500px, 90vw);
+  height: min(500px, 90vw);
   border-radius: 50%;
   background: radial-gradient(circle, rgba(212, 175, 55, 0.2), transparent 65%);
   filter: blur(40px);
@@ -446,9 +536,7 @@ body:not(.is-invitation-locked) .invite-gated {
 .hero__eyebrow {
   color: var(--accent-soft);
   font-size: clamp(0.95rem, 2.5vw, 1.15rem);
-  font-weight: 400;
   margin-bottom: 1.5rem;
-  opacity: 0.9;
 }
 
 .hero__title {
@@ -457,24 +545,22 @@ body:not(.is-invitation-locked) .invite-gated {
 
 .hero__title-line {
   display: block;
-  font-size: clamp(2.6rem, 8vw, 4.5rem);
+  font-size: clamp(2.4rem, 8vw, 4.5rem);
   font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  line-height: 1.2;
   background: linear-gradient(135deg, #fff 10%, var(--accent-soft) 45%, var(--accent) 90%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  text-shadow: 0 0 80px rgba(212, 175, 55, 0.25);
 }
 
 .hero__title-en {
   display: block;
   margin-top: 0.5rem;
   font-family: var(--font-en);
-  font-size: clamp(0.85rem, 2vw, 1.05rem);
+  font-size: clamp(0.8rem, 2vw, 1.05rem);
   font-weight: 300;
-  letter-spacing: 0.35em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--text-secondary);
 }
@@ -490,8 +576,7 @@ body:not(.is-invitation-locked) .invite-gated {
 
 .hero__name {
   font-size: clamp(1.5rem, 4vw, 2.25rem);
-  font-weight: 600;
-  color: var(--text);
+  font-weight: 700;
 }
 
 .hero__ampersand {
@@ -509,13 +594,17 @@ body:not(.is-invitation-locked) .invite-gated {
 
 .hero__scroll {
   position: absolute;
-  bottom: 2rem;
+  bottom: max(2rem, var(--safe-bottom));
   left: 50%;
   transform: translateX(-50%);
   width: 22px;
   height: 36px;
   border: 1px solid rgba(212, 175, 55, 0.4);
   border-radius: 12px;
+}
+
+.hero__scroll[hidden] {
+  display: none;
 }
 
 .hero__scroll span {
@@ -540,12 +629,12 @@ body:not(.is-invitation-locked) .invite-gated {
 }
 
 /* --------------------------------------------------------------------------
-   3. Envelope
+   Envelope
    -------------------------------------------------------------------------- */
 .envelope-section {
   position: fixed;
   inset: 0;
-  z-index: 8000;
+  z-index: var(--z-envelope);
   display: grid;
   place-items: center;
   background: rgba(9, 9, 9, 0.92);
@@ -595,9 +684,7 @@ body:not(.is-invitation-locked) .invite-gated {
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   transform-origin: top center;
   transform-style: preserve-3d;
-  backface-visibility: hidden;
   z-index: 4;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .envelope__pocket {
@@ -655,11 +742,11 @@ body:not(.is-invitation-locked) .invite-gated {
 
 .invite-card__mini-names {
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* --------------------------------------------------------------------------
-   4. Invitation card
+   Invitation
    -------------------------------------------------------------------------- */
 .invitation {
   background: linear-gradient(180deg, transparent, rgba(212, 175, 55, 0.03), transparent);
@@ -747,12 +834,11 @@ body:not(.is-invitation-locked) .invite-gated {
   background: linear-gradient(90deg, transparent, var(--accent));
 }
 
-.invite__divider span:last-child {
+.invite__divider span:last-of-type {
   background: linear-gradient(90deg, var(--accent), transparent);
 }
 
 .invite__intro {
-  color: var(--text);
   font-size: 1.1rem;
   margin-bottom: 1.75rem;
 }
@@ -777,7 +863,7 @@ body:not(.is-invitation-locked) .invite-gated {
 .invite__person-name {
   display: block;
   font-size: clamp(1.35rem, 3.5vw, 1.85rem);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .invite__and {
@@ -805,11 +891,9 @@ body:not(.is-invitation-locked) .invite-gated {
   border-radius: var(--radius-sm);
 }
 
-.invite__details i {
+.invite__details .icon {
   color: var(--accent);
-  margin-top: 0.35rem;
-  width: 1.1rem;
-  text-align: center;
+  margin-top: 0.2rem;
 }
 
 .invite__label {
@@ -821,18 +905,16 @@ body:not(.is-invitation-locked) .invite-gated {
 
 .invite__value {
   display: block;
-  color: var(--text);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .invite__closing {
   color: var(--accent-soft);
   font-style: italic;
-  font-weight: 400;
 }
 
 /* --------------------------------------------------------------------------
-   5. Countdown
+   Countdown
    -------------------------------------------------------------------------- */
 .countdown__grid {
   display: grid;
@@ -854,10 +936,12 @@ body:not(.is-invitation-locked) .invite-gated {
   transition: transform 0.4s var(--ease-lux), border-color 0.4s, box-shadow 0.4s;
 }
 
-.countdown__unit:hover {
-  transform: translateY(-6px);
-  border-color: rgba(212, 175, 55, 0.5);
-  box-shadow: var(--shadow-glow);
+@media (hover: hover) and (pointer: fine) {
+  .countdown__unit:hover {
+    transform: translateY(-6px);
+    border-color: rgba(212, 175, 55, 0.5);
+    box-shadow: var(--shadow-glow);
+  }
 }
 
 .countdown__num {
@@ -867,7 +951,6 @@ body:not(.is-invitation-locked) .invite-gated {
   font-weight: 600;
   color: var(--accent);
   line-height: 1.2;
-  tabular-nums: true;
   font-variant-numeric: tabular-nums;
 }
 
@@ -879,7 +962,7 @@ body:not(.is-invitation-locked) .invite-gated {
 }
 
 /* --------------------------------------------------------------------------
-   6. Gallery
+   Gallery + Lightbox
    -------------------------------------------------------------------------- */
 .gallery__grid {
   display: grid;
@@ -890,11 +973,14 @@ body:not(.is-invitation-locked) .invite-gated {
 .gallery__item {
   position: relative;
   aspect-ratio: 4 / 5;
+  width: 100%;
+  padding: 0;
   border-radius: var(--radius-sm);
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  cursor: pointer;
   background: #151515;
+  cursor: pointer;
+  color: inherit;
 }
 
 .gallery__item img {
@@ -915,22 +1001,6 @@ body:not(.is-invitation-locked) .invite-gated {
   pointer-events: none;
 }
 
-.gallery__item:hover img,
-.gallery__item:focus-visible img {
-  transform: scale(1.08);
-  filter: brightness(1) saturate(1.05);
-}
-
-.gallery__item:hover::after,
-.gallery__item:focus-visible::after {
-  opacity: 0.25;
-}
-
-.gallery__item:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-}
-
 .gallery__item--wide {
   grid-column: span 2;
   aspect-ratio: 16 / 10;
@@ -942,40 +1012,68 @@ body:not(.is-invitation-locked) .invite-gated {
   display: grid;
   place-items: center;
   color: var(--accent);
-  font-size: 1.5rem;
   opacity: 0;
   transition: opacity 0.35s;
   z-index: 2;
   pointer-events: none;
 }
 
-.gallery__item:hover .gallery__overlay-icon {
-  opacity: 1;
+.gallery__overlay-icon .icon {
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
-/* Lightbox */
+@media (hover: hover) and (pointer: fine) {
+  .gallery__item:hover img,
+  .gallery__item:focus-visible img {
+    transform: scale(1.08);
+    filter: brightness(1) saturate(1.05);
+  }
+
+  .gallery__item:hover::after,
+  .gallery__item:focus-visible::after {
+    opacity: 0.25;
+  }
+
+  .gallery__item:hover .gallery__overlay-icon {
+    opacity: 1;
+  }
+}
+
 .lightbox {
   position: fixed;
   inset: 0;
-  z-index: 9500;
-  background: rgba(0, 0, 0, 0.92);
+  z-index: var(--z-lightbox);
+  background: rgba(0, 0, 0, 0.94);
   display: grid;
   place-items: center;
   padding: 2rem;
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .lightbox[hidden] {
   display: none !important;
 }
 
-.lightbox__img {
+.lightbox__figure {
   max-width: min(900px, 92vw);
-  max-height: 85vh;
+  text-align: center;
+}
+
+.lightbox__img {
+  max-width: 100%;
+  max-height: 80vh;
   object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.lightbox__caption {
+  margin-top: 0.85rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
 }
 
 .lightbox__close,
@@ -992,42 +1090,38 @@ body:not(.is-invitation-locked) .invite-gated {
   transition: background 0.3s, transform 0.3s;
 }
 
-.lightbox__close:hover,
-.lightbox__nav:hover {
-  background: rgba(212, 175, 55, 0.25);
-  transform: scale(1.05);
+@media (hover: hover) and (pointer: fine) {
+  .lightbox__close:hover,
+  .lightbox__nav:hover {
+    background: rgba(212, 175, 55, 0.25);
+  }
 }
 
 .lightbox__close {
-  top: 1.25rem;
-  left: 1.25rem;
+  top: max(1.25rem, env(safe-area-inset-top));
+  left: max(1.25rem, env(safe-area-inset-left));
 }
 
 .lightbox__nav--prev {
-  right: 1.25rem;
+  right: max(1.25rem, env(safe-area-inset-right));
   top: 50%;
   transform: translateY(-50%);
 }
 
 .lightbox__nav--next {
-  left: 1.25rem;
+  left: max(1.25rem, env(safe-area-inset-left));
   top: 50%;
   transform: translateY(-50%);
 }
 
-.lightbox__nav--prev:hover,
-.lightbox__nav--next:hover {
-  transform: translateY(-50%) scale(1.05);
-}
-
 /* --------------------------------------------------------------------------
-   7. Music player
+   Music + Toast
    -------------------------------------------------------------------------- */
 .music-player {
   position: fixed;
-  bottom: 1.5rem;
-  left: 1.5rem;
-  z-index: 7000;
+  bottom: calc(1.5rem + var(--safe-bottom));
+  left: calc(1.5rem + var(--safe-left));
+  z-index: var(--z-music);
 }
 
 .music-player__btn {
@@ -1035,10 +1129,10 @@ body:not(.is-invitation-locked) .invite-gated {
   height: 56px;
   border-radius: 50%;
   border: 1px solid var(--border-gold);
-  background: rgba(20, 20, 20, 0.85);
+  background: rgba(20, 20, 20, 0.88);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: var(--accent);
-  font-size: 1.15rem;
   display: grid;
   place-items: center;
   box-shadow: var(--shadow-glow), var(--shadow-soft);
@@ -1046,17 +1140,14 @@ body:not(.is-invitation-locked) .invite-gated {
   position: relative;
 }
 
-.music-player__btn:hover {
-  transform: scale(1.08);
+@media (hover: hover) and (pointer: fine) {
+  .music-player__btn:hover {
+    transform: scale(1.08);
+  }
 }
 
 .music-player__btn.is-playing {
   box-shadow: 0 0 30px rgba(212, 175, 55, 0.45);
-}
-
-.music-player__btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
 }
 
 .music-player__wave {
@@ -1078,11 +1169,11 @@ body:not(.is-invitation-locked) .invite-gated {
   background: var(--accent);
   border-radius: 2px;
   animation: wave 0.8s ease-in-out infinite;
+  transform-origin: bottom;
 }
 
 .music-player__wave i:nth-child(1) {
   height: 6px;
-  animation-delay: 0s;
 }
 
 .music-player__wave i:nth-child(2) {
@@ -1105,20 +1196,52 @@ body:not(.is-invitation-locked) .invite-gated {
   }
 }
 
+.toast {
+  position: fixed;
+  bottom: calc(5.5rem + var(--safe-bottom));
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  z-index: var(--z-toast);
+  max-width: min(90vw, 360px);
+  padding: 0.85rem 1.25rem;
+  background: rgba(20, 20, 20, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s, transform 0.35s var(--ease-lux), visibility 0.35s;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
 /* --------------------------------------------------------------------------
-   8. Location
+   Location / RSVP / Timeline / Quote / Thanks / Footer
    -------------------------------------------------------------------------- */
-.location__card {
-  max-width: 480px;
+.location__card,
+.rsvp__card {
+  max-width: 520px;
   margin-inline: auto;
   text-align: center;
-  padding: clamp(2rem, 5vw, 3rem);
+  padding: clamp(2rem, 5vw, 2.75rem);
   background: var(--card);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border: 1px solid rgba(212, 175, 55, 0.22);
   border-radius: var(--radius);
   box-shadow: var(--shadow-soft);
+}
+
+.location__card {
+  max-width: 480px;
 }
 
 .location__map-visual {
@@ -1128,7 +1251,6 @@ body:not(.is-invitation-locked) .invite-gated {
   margin: 0 auto 1.5rem;
   display: grid;
   place-items: center;
-  font-size: 2.5rem;
   color: var(--accent);
 }
 
@@ -1156,21 +1278,6 @@ body:not(.is-invitation-locked) .invite-gated {
   margin-bottom: 1.5rem;
 }
 
-/* --------------------------------------------------------------------------
-   9. RSVP
-   -------------------------------------------------------------------------- */
-.rsvp__card {
-  max-width: 520px;
-  margin-inline: auto;
-  padding: clamp(2rem, 5vw, 2.75rem);
-  background: var(--card);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(212, 175, 55, 0.22);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-soft);
-}
-
 .rsvp__input {
   width: 100%;
   padding: 0.95rem 1.15rem;
@@ -1179,7 +1286,6 @@ body:not(.is-invitation-locked) .invite-gated {
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-sm);
   color: var(--text);
-  font-family: inherit;
   font-size: 1rem;
   transition: border-color 0.3s;
 }
@@ -1189,7 +1295,6 @@ body:not(.is-invitation-locked) .invite-gated {
 }
 
 .rsvp__input:focus {
-  outline: none;
   border-color: var(--accent);
 }
 
@@ -1213,7 +1318,7 @@ body:not(.is-invitation-locked) .invite-gated {
 
 .rsvp__thanks-title {
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 0.5rem;
   background: linear-gradient(180deg, #fff, var(--accent-soft));
   -webkit-background-clip: text;
@@ -1225,9 +1330,6 @@ body:not(.is-invitation-locked) .invite-gated {
   color: var(--text-secondary);
 }
 
-/* --------------------------------------------------------------------------
-   10. Timeline
-   -------------------------------------------------------------------------- */
 .timeline__list {
   position: relative;
   max-width: 640px;
@@ -1278,9 +1380,11 @@ body:not(.is-invitation-locked) .invite-gated {
   transition: border-color 0.4s, transform 0.4s var(--ease-lux);
 }
 
-.timeline__card:hover {
-  border-color: rgba(212, 175, 55, 0.4);
-  transform: translateX(-4px);
+@media (hover: hover) and (pointer: fine) {
+  .timeline__card:hover {
+    border-color: rgba(212, 175, 55, 0.4);
+    transform: translateX(-4px);
+  }
 }
 
 .timeline__date {
@@ -1288,13 +1392,11 @@ body:not(.is-invitation-locked) .invite-gated {
   color: var(--accent);
   font-size: 0.85rem;
   margin-bottom: 0.35rem;
-  font-family: var(--font-en);
-  letter-spacing: 0.04em;
 }
 
 .timeline__title {
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 0.35rem;
 }
 
@@ -1303,19 +1405,14 @@ body:not(.is-invitation-locked) .invite-gated {
   font-size: 0.95rem;
 }
 
-/* --------------------------------------------------------------------------
-   11. Quote
-   -------------------------------------------------------------------------- */
 .quote {
-  background:
-    radial-gradient(ellipse at 50% 50%, rgba(212, 175, 55, 0.08), transparent 60%);
+  background: radial-gradient(ellipse at 50% 50%, rgba(212, 175, 55, 0.08), transparent 60%);
 }
 
 .quote__block {
   max-width: 700px;
   margin-inline: auto;
   text-align: center;
-  position: relative;
   padding: 2rem 1rem;
 }
 
@@ -1331,9 +1428,8 @@ body:not(.is-invitation-locked) .invite-gated {
 
 .quote__text {
   font-size: clamp(1.25rem, 3.5vw, 1.75rem);
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.8;
-  color: var(--text);
   margin-bottom: 1.25rem;
 }
 
@@ -1342,9 +1438,6 @@ body:not(.is-invitation-locked) .invite-gated {
   font-size: 0.95rem;
 }
 
-/* --------------------------------------------------------------------------
-   12. Thank you
-   -------------------------------------------------------------------------- */
 .thanks {
   padding-bottom: clamp(5rem, 12vw, 8rem);
 }
@@ -1364,7 +1457,7 @@ body:not(.is-invitation-locked) .invite-gated {
 
 .thanks__title {
   font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 1rem;
   background: linear-gradient(135deg, #fff, var(--accent-soft));
   -webkit-background-clip: text;
@@ -1380,41 +1473,52 @@ body:not(.is-invitation-locked) .invite-gated {
 
 .thanks__names {
   font-size: 1.35rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--accent);
-  letter-spacing: 0.05em;
 }
 
-/* --------------------------------------------------------------------------
-   Footer
-   -------------------------------------------------------------------------- */
 .footer {
   position: relative;
-  z-index: 2;
+  z-index: var(--z-main);
   text-align: center;
-  padding: 2rem 1rem 6rem;
+  padding: 2rem 1rem calc(6rem + var(--safe-bottom));
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .footer__text {
   color: var(--text-muted);
   font-size: 0.85rem;
-  font-family: var(--font-en);
 }
 
 /* --------------------------------------------------------------------------
    Reduced motion
    -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  .ambient__orb,
+  .loader__ring,
+  .loader__monogram,
+  .hero__glow,
+  .hero__scroll span,
+  .location__pulse,
+  .music-player__wave i,
+  .rsvp__thanks-icon,
+  .thanks__ornament {
+    animation: none !important;
+  }
+
+  .reveal-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  body:not(.is-invitation-locked) .invite-gated {
+    animation: none;
   }
 
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
@@ -1433,6 +1537,10 @@ body:not(.is-invitation-locked) .invite-gated {
 }
 
 @media (max-width: 640px) {
+  :root {
+    --container: min(1100px, calc(100% - 1.5rem));
+  }
+
   .countdown__grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1469,8 +1577,12 @@ body:not(.is-invitation-locked) .invite-gated {
   }
 
   .music-player {
-    bottom: 1rem;
-    left: 1rem;
+    bottom: calc(1rem + var(--safe-bottom));
+    left: calc(1rem + var(--safe-left));
+  }
+
+  .lightbox {
+    padding: 1rem;
   }
 
   .lightbox__nav--prev {
@@ -1484,6 +1596,15 @@ body:not(.is-invitation-locked) .invite-gated {
   .hero__scroll {
     display: none;
   }
+
+  .btn {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .invite__content .btn--ghost {
+    width: auto;
+  }
 }
 
 @media (max-width: 400px) {
@@ -1493,5 +1614,27 @@ body:not(.is-invitation-locked) .invite-gated {
 
   .gallery__item--wide {
     grid-column: span 1;
+  }
+}
+
+/* High contrast / forced colors */
+@media (forced-colors: active) {
+  .btn--gold,
+  .countdown__unit,
+  .invite__border,
+  .location__card,
+  .rsvp__card,
+  .timeline__card {
+    border: 1px solid CanvasText;
+  }
+
+  .section__title,
+  .hero__title-line,
+  .thanks__title,
+  .rsvp__thanks-title {
+    color: CanvasText;
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
   }
 }

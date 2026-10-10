@@ -1,13 +1,13 @@
 {
-  "name": "دعوة خطوبة — صلاح وشروق",
-  "short_name": "صلاح وشروق",
-  "description": "تجربة دعوة خطوبة سينمائية فاخرة",
+  "name": "دعوة زفاف عمر وشيماء",
+  "short_name": "عمر وشيماء",
+  "description": "أفراح آل باداود و آل بازمول",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#050505",
-  "theme_color": "#050505",
+  "background_color": "#f4efe8",
+  "theme_color": "#f3efe8",
   "lang": "ar",
   "dir": "rtl",
   "icons": [

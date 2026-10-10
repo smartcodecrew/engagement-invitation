@@ -15,16 +15,16 @@
   <meta property="og:url" content="https://smartcodecrew.github.io/engagement-invitation/" />
   <meta property="og:title" content="دعوة زفاف | عمر &amp; شيماء" />
   <meta property="og:description" content="أفراح آل باداود و آل بازمول — نتشرف بدعوتكم لحضور حفل الزفاف." />
-  <meta property="og:image" content="https://smartcodecrew.github.io/engagement-invitation/assets/icons/og-image.svg" />
+  <meta property="og:image" content="https://smartcodecrew.github.io/engagement-invitation/assets/images/elysee-frame.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="دعوة زفاف | عمر &amp; شيماء" />
   <meta name="twitter:description" content="أفراح آل باداود و آل بازمول." />
-  <meta name="twitter:image" content="https://smartcodecrew.github.io/engagement-invitation/assets/icons/og-image.svg" />
+  <meta name="twitter:image" content="https://smartcodecrew.github.io/engagement-invitation/assets/images/elysee-frame.jpg" />
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
   <link rel="manifest" href="site.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Cairo:wght@400;500;600&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Event","name":"حفل زفاف عمر وشيماء","startDate":"2026-11-09","eventAttendanceMode":"https://schema.org/OfflineEventAttendanceMode","eventStatus":"https://schema.org/EventScheduled","location":{"@type":"Place","name":"قاعة شغف - الإسكان الجنوبي"},"organizer":{"@type":"Organization","name":"أفراح آل باداود و آل بازمول"}}
@@ -33,177 +33,190 @@
 <body>
   <a class="skip-link" href="#story">تخطي إلى الدعوة</a>
 
-  <!-- Doors -->
+  <div class="hud" id="hud">
+    <button type="button" class="pill pill--float" id="scroll-next" hidden>إلى الأسفل <i class="chev" aria-hidden="true"></i></button>
+    <button type="button" class="music" id="music-toggle" aria-label="تشغيل الموسيقى" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 4a6 6 0 0 0-6 6v5a2 2 0 0 1-2 2v1h4v-6H6a6 6 0 0 1 12 0h-2v6h4v-1a2 2 0 0 1-2-2v-5a6 6 0 0 0-6-6zm-1 16h2v2h-2z"/></svg>
+    </button>
+    <audio id="bg-music" preload="none" loop></audio>
+  </div>
+
   <div id="doors" class="doors" role="dialog" aria-modal="true" aria-label="فتح الدعوة">
     <div class="doors__pair" id="doors-pair">
-      <div class="door door--right" aria-hidden="true">
-        <svg class="door__vine door__vine--right" viewBox="0 0 160 640"><use href="#vine"></use></svg>
-        <svg class="door__bloom door__bloom--br" viewBox="0 0 180 160"><use href="#peony"></use></svg>
-      </div>
-      <div class="door door--left" aria-hidden="true">
-        <svg class="door__vine door__vine--left" viewBox="0 0 160 640"><use href="#vine"></use></svg>
-        <svg class="door__bloom door__bloom--bl" viewBox="0 0 180 160"><use href="#peony"></use></svg>
-      </div>
-      <button type="button" class="seal" id="open-invite" aria-label="افتح الدعوة">
-        <span class="seal__wax">
-          <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#sprig"></use></svg>
+      <div class="door door--left" aria-hidden="true"></div>
+      <div class="door door--right" aria-hidden="true"></div>
+      <button type="button" class="doors__open" id="open-invite">
+        <span class="seal">
+          <img src="assets/images/wax-seal.jpg" alt="" />
         </span>
+        <span class="pill">افتح الدعوة</span>
       </button>
-      <button type="button" class="pill" id="open-invite-label">افتح الدعوة</button>
     </div>
   </div>
 
-  <!-- Invitation -->
-  <main id="stage" class="stage" hidden>
-    <div class="frame" aria-hidden="true">
-      <svg class="frame__arch" viewBox="0 0 300 90" preserveAspectRatio="none">
-        <path d="M8 90 V42 Q8 8 150 8 Q292 8 292 42 V90" fill="none" stroke="currentColor" stroke-width="1.2"/>
-      </svg>
-      <svg class="frame__vine frame__vine--right" viewBox="0 0 120 900"><use href="#vine-tall"></use></svg>
-      <svg class="frame__vine frame__vine--left" viewBox="0 0 120 900"><use href="#vine-tall"></use></svg>
-      <svg class="frame__bloom frame__bloom--br" viewBox="0 0 200 170"><use href="#peony"></use></svg>
-      <svg class="frame__bloom frame__bloom--bl" viewBox="0 0 200 170"><use href="#peony"></use></svg>
-    </div>
-
+  <main id="stage" class="stage" aria-hidden="true">
+    <p class="brand">دعوة زفاف</p>
     <div class="scroller" id="scroller">
       <section class="panel panel--cover" id="cover">
-        <p class="brand">دعوة زفاف</p>
-        <p class="cover__families" id="cover-families">أفراح آل باداود و آل بازمول</p>
+        <p class="cover__families rise" id="cover-families">أفراح آل باداود و آل بازمول</p>
         <h1 class="cover__names">
-          <span class="script" id="cover-groom">عمر</span>
-          <span class="script script--amp">&amp;</span>
-          <span class="script" id="cover-bride">شيماء</span>
+          <span class="script rise" id="cover-groom">عمر</span>
+          <span class="script script--amp rise">&amp;</span>
+          <span class="script rise" id="cover-bride">شيماء</span>
         </h1>
-        <p class="cover__guest" id="cover-guest" hidden></p>
+        <p class="cover__guest rise" id="cover-guest" hidden></p>
       </section>
 
       <section class="panel panel--letter" id="story" aria-labelledby="letter-title">
-        <h2 id="letter-title" class="stack-names">
+        <h2 id="letter-title" class="stack-names rise">
           <span id="letter-groom">عمر</span>
           <span class="script script--and">و</span>
           <span id="letter-bride">شيماء</span>
         </h2>
-        <div class="diamond" aria-hidden="true"></div>
-        <div class="letter" id="letter-body"></div>
+        <div class="ornament rise" aria-hidden="true"><span></span><i></i><span></span></div>
+        <div class="letter rise" id="letter-body"></div>
       </section>
 
-      <section class="panel panel--date" id="when" aria-label="التاريخ">
-        <p class="kicker">التاريخ</p>
-        <div class="date-medal">
-          <svg class="date-medal__sprig" viewBox="0 0 64 40" aria-hidden="true"><use href="#sprig"></use></svg>
-          <p class="date-medal__day" id="date-hijri">29/5/1448</p>
-          <p class="date-medal__sub" id="date-weekday">الاثنين</p>
-          <p class="date-medal__year" id="date-greg">9/11/2026</p>
+      <section class="panel" id="when" aria-label="التاريخ">
+        <div class="kicker rise"><span id="date-kicker">التاريخ</span></div>
+        <div class="ornament rise" aria-hidden="true"><span></span><i></i><span></span></div>
+        <div class="medal rise">
+          <svg class="medal__sprig" viewBox="0 0 80 36" aria-hidden="true">
+            <path d="M40 34 V10 M40 16 C32 10 28 6 30 2 M40 18 C48 12 54 8 52 3 M40 22 C33 18 30 16 32 12 M40 22 C47 18 52 16 50 12" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+          </svg>
+          <p class="medal__day" id="date-day">09</p>
+          <p class="medal__month" id="date-month">نوفمبر</p>
+          <p class="medal__year" id="date-year">2026</p>
+          <i class="gem" aria-hidden="true"></i>
+          <p class="medal__week" id="date-weekday">الاثنين</p>
+          <p class="medal__hijri" id="date-hijri">29/5/1448 هـ</p>
+          <a class="pill pill--mini" id="calendar-link" href="#" download="wedding.ics">أضف إلى التقويم</a>
         </div>
-        <a class="pill pill--ghost" id="calendar-link" href="#" download="wedding.ics">أضف إلى التقويم</a>
-      </section>
-
-      <section class="panel" id="countdown" aria-labelledby="cd-title">
-        <p class="kicker" id="cd-title">يبدأ الحفل بعد</p>
-        <div class="diamond" aria-hidden="true"></div>
-        <div class="count" role="group" aria-label="العد التنازلي">
-          <div><span id="cd-days">0</span><small>يوم</small></div>
-          <span class="count__gem" aria-hidden="true">✦</span>
-          <div><span id="cd-hours">00</span><small>ساعة</small></div>
-          <span class="count__colon" aria-hidden="true">:</span>
-          <div><span id="cd-minutes">00</span><small>دقيقة</small></div>
-          <span class="count__colon" aria-hidden="true">:</span>
-          <div><span id="cd-seconds">00</span><small>ثانية</small></div>
-        </div>
-        <p class="sr-only" id="cd-live" aria-live="polite"></p>
       </section>
 
       <section class="panel" id="location" aria-labelledby="loc-title">
-        <p class="mini-names" id="loc-names">عمر و شيماء</p>
-        <p class="kicker" id="loc-title">الموقع</p>
-        <div class="compass" aria-hidden="true">
-          <svg viewBox="0 0 220 240">
-            <path d="M40 200 V70 Q40 20 110 20 Q180 20 180 70 V200" fill="none" stroke="currentColor" stroke-width="1"/>
-            <path d="M28 200 H192" fill="none" stroke="currentColor" stroke-width="1"/>
-            <circle cx="110" cy="118" r="46" fill="none" stroke="currentColor" stroke-width="0.8"/>
-            <circle cx="110" cy="118" r="28" fill="none" stroke="currentColor" stroke-width="0.6"/>
-            <path d="M110 40 V196 M40 118 H180" fill="none" stroke="currentColor" stroke-width="0.6"/>
-            <path d="M110 78 l8 28 8 4-16 10 16 10-8 4-8 28-8-28-8-4 16-10-16-10 8-4z" fill="currentColor"/>
-            <text x="110" y="36" text-anchor="middle" font-size="11">N</text>
+        <p class="mini-names rise" id="loc-names">عمر<br>و<br>شيماء</p>
+        <div class="ornament rise" aria-hidden="true"><span></span><i></i><span></span></div>
+        <p class="kicker rise" id="loc-title"><span>الموقع</span></p>
+        <div class="compass rise" aria-hidden="true">
+          <svg viewBox="0 0 220 200">
+            <path d="M36 188 V78 Q36 22 110 22 Q184 22 184 78 V188" fill="none" stroke="currentColor" stroke-width="1.1"/>
+            <path d="M22 188 H198" fill="none" stroke="currentColor" stroke-width="1"/>
+            <circle cx="110" cy="112" r="46" fill="none" stroke="currentColor" stroke-width=".7"/>
+            <circle cx="110" cy="112" r="28" fill="none" stroke="currentColor" stroke-width=".6"/>
+            <path d="M110 48 V176 M48 112 H172" fill="none" stroke="currentColor" stroke-width=".55"/>
+            <path d="M110 58 l3 8 h-6z" fill="currentColor"/>
+            <text x="110" y="44" text-anchor="middle" font-size="11" fill="currentColor" font-family="Cormorant Garamond, serif">N</text>
+            <path d="M110 78 c-8 16 -6 28 0 40 c6-12 8-24 0-40z" fill="currentColor"/>
+            <circle cx="110" cy="92" r="7" fill="none" stroke="#f6f1ea" stroke-width="3"/>
+            <circle cx="110" cy="92" r="5.5" fill="currentColor"/>
           </svg>
+          <p class="compass__tag" id="compass-tag">قاعة شغف</p>
         </div>
-        <p class="venue-script" id="venue-name">قاعة شغف</p>
-        <p class="venue-address" id="venue-address">الإسكان الجنوبي</p>
-        <a class="pill pill--ghost" id="maps-link" href="#" target="_blank" rel="noopener noreferrer">افتح الخريطة</a>
+        <p class="venue-script rise" id="venue-name">قاعة شغف</p>
+        <p class="venue-address rise" id="venue-address">الإسكان الجنوبي</p>
+        <a class="pill pill--wide rise" id="maps-link" href="#" target="_blank" rel="noopener noreferrer">افتح الخريطة</a>
+      </section>
+
+      <section class="panel" id="countdown" aria-labelledby="cd-title">
+        <p class="kicker rise" id="cd-title"><span>يبدأ الحفل بعد</span></p>
+        <div class="ornament rise" aria-hidden="true"><span></span><i></i><span></span></div>
+        <div class="days rise">
+          <span class="days__line" aria-hidden="true"></span>
+          <span class="days__num" id="cd-days">0</span>
+          <span class="days__line" aria-hidden="true"></span>
+        </div>
+        <p class="days__label rise">يوم</p>
+        <div class="clock rise" role="group" aria-label="الساعات والدقائق والثواني">
+          <div><span id="cd-hours">00</span><small>ساعة</small></div>
+          <b aria-hidden="true">:</b>
+          <div><span id="cd-minutes">00</span><small>دقيقة</small></div>
+          <b aria-hidden="true">:</b>
+          <div><span id="cd-seconds">00</span><small>ثانية</small></div>
+        </div>
+        <p class="quote rise" id="cd-quote"></p>
+        <p class="sr-only" id="cd-live" aria-live="polite"></p>
+      </section>
+
+      <section class="panel" id="program" aria-labelledby="program-title">
+        <p class="kicker rise" id="program-title"><span>مسار الحفل</span></p>
+        <div class="ornament rise" aria-hidden="true"><span></span><i></i><span></span></div>
+        <ol class="steps" id="steps"></ol>
       </section>
 
       <section class="panel" id="notes" aria-labelledby="notes-title">
-        <p class="kicker" id="notes-title">تنبيهات</p>
-        <div class="diamond" aria-hidden="true"></div>
-        <ul class="rules" id="rules"></ul>
+        <p class="kicker rise" id="notes-title"><span>تنبيهات</span></p>
+        <div class="ornament rise" aria-hidden="true"><span></span><i></i><span></span></div>
+        <ul class="steps steps--rules" id="rules"></ul>
+      </section>
+
+      <section class="panel panel--gallery" id="gallery" aria-labelledby="gallery-title">
+        <h2 class="script script--md rise" id="gallery-title">أجمل اللحظات</h2>
+        <div class="ornament rise" aria-hidden="true"><span></span><i></i><span></span></div>
+        <p class="fine rise" id="gallery-lead">لحظات هذه الليلة تكتمل بحضوركم</p>
+        <div class="mosaic rise" id="mosaic">
+          <figure class="mosaic__hero"><img src="assets/images/elysee-frame.jpg" alt="" /></figure>
+          <figure><img src="assets/images/elysee-doors.jpg" alt="" /></figure>
+          <figure><img src="assets/images/elysee-frame.jpg" alt="" /></figure>
+        </div>
+      </section>
+
+      <section class="panel" id="wish" aria-labelledby="wish-title">
+        <h2 class="script script--md rise" id="wish-title">كلمة منك</h2>
+        <div class="ornament rise" aria-hidden="true"><span></span><i></i><span></span></div>
+        <p class="fine rise">اكتب اسمك ورسالة قصيرة للعروسين</p>
+        <form class="card-form rise" id="wish-form">
+          <input id="wish-name" name="name" type="text" maxlength="40" placeholder="الاسم" autocomplete="name" required />
+          <textarea id="wish-text" name="text" maxlength="180" rows="3" placeholder="رسالتك..." required></textarea>
+          <button class="pill pill--solid" type="submit">أرسِل الكلمة</button>
+        </form>
+        <p class="thanks rise" id="wish-thanks" hidden>شكرًا، حُفظت كلمتك على هذا الجهاز</p>
+      </section>
+
+      <section class="panel" id="rsvp" aria-labelledby="rsvp-title">
+        <h2 class="script script--md rise" id="rsvp-title">تأكيد الحضور</h2>
+        <div class="ornament rise" aria-hidden="true"><span></span><i></i><span></span></div>
+        <p class="fine rise">شاركنا إن كنت تشرفنا بالحضور</p>
+        <form class="card-form rise" id="rsvp-form">
+          <input id="rsvp-name" name="name" type="text" maxlength="40" placeholder="الاسم" autocomplete="name" required />
+          <div class="choice" role="group" aria-label="الحضور">
+            <button type="button" class="pill is-pick" id="rsvp-yes" aria-pressed="true">سأحضر</button>
+            <button type="button" class="pill" id="rsvp-no" aria-pressed="false">أعتذر</button>
+          </div>
+          <div class="stepper" id="rsvp-count-wrap">
+            <button type="button" id="count-minus" aria-label="إنقاص العدد">−</button>
+            <span id="rsvp-count">1</span>
+            <button type="button" id="count-plus" aria-label="زيادة العدد">+</button>
+          </div>
+          <button class="pill pill--solid" type="submit">إرسال</button>
+        </form>
+        <p class="thanks rise" id="rsvp-thanks" hidden>شكرًا، تم حفظ ردك على هذا الجهاز</p>
+      </section>
+
+      <section class="panel" id="gift" aria-labelledby="gift-title">
+        <p class="kicker rise" id="gift-title"><span>الهدية</span></p>
+        <div class="ornament rise" aria-hidden="true"><span></span><i></i><span></span></div>
+        <p class="script script--md rise" id="gift-lead">حضوركم هو أجمل هدية</p>
+        <div class="iban rise" id="iban-card" hidden>
+          <p class="fine" id="iban-owner"></p>
+          <p class="iban__num" id="iban-num"></p>
+          <button type="button" class="pill pill--mini" id="iban-copy">انسخ الآيبان</button>
+        </div>
       </section>
 
       <section class="panel panel--end" id="ending">
-        <h2 class="stack-names">
+        <h2 class="stack-names rise">
           <span id="end-groom">عمر</span>
           <span class="script script--and">و</span>
           <span id="end-bride">شيماء</span>
         </h2>
-        <div class="diamond" aria-hidden="true"></div>
-        <p class="closing" id="closing-text">وبحضوركم يتم الفرح والسرور</p>
-        <p class="closing__date" id="closing-date">9 نوفمبر 2026</p>
+        <div class="ornament rise" aria-hidden="true"><span></span><i></i><span></span></div>
+        <p class="closing rise" id="closing-text">وبحضوركم يتم الفرح والسرور</p>
+        <p class="closing__date rise" id="closing-date">9 نوفمبر 2026</p>
+        <p class="credit rise">الموسيقى: Gymnopédie No. 1 — Kevin MacLeod، برخصة CC BY 4.0</p>
       </section>
     </div>
-
-    <div class="dock">
-      <button type="button" class="pill pill--float" id="scroll-next">إلى الأسفل <i class="chev" aria-hidden="true"></i></button>
-      <button type="button" class="music" id="music-toggle" aria-label="تشغيل الموسيقى" aria-pressed="false" hidden>
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3v10.2A3.2 3.2 0 1 0 13.6 16V7h4.2V3H12z"/></svg>
-      </button>
-      <audio id="bg-music" preload="none" loop></audio>
-    </div>
   </main>
-
-  <svg class="sprite" aria-hidden="true">
-    <symbol id="vine" viewBox="0 0 160 640">
-      <path d="M80 20 C40 80 120 120 70 180 C20 240 130 280 75 350 C25 410 125 460 80 530" fill="none" stroke="currentColor" stroke-width="1.2"/>
-      <g fill="currentColor">
-        <ellipse cx="58" cy="90" rx="10" ry="5" transform="rotate(-30 58 90)"/>
-        <ellipse cx="98" cy="140" rx="11" ry="5" transform="rotate(25 98 140)"/>
-        <ellipse cx="52" cy="210" rx="10" ry="5" transform="rotate(-20 52 210)"/>
-        <ellipse cx="104" cy="270" rx="12" ry="5" transform="rotate(30 104 270)"/>
-        <ellipse cx="55" cy="340" rx="10" ry="5" transform="rotate(-35 55 340)"/>
-        <ellipse cx="100" cy="410" rx="11" ry="5" transform="rotate(20 100 410)"/>
-        <circle cx="72" cy="160" r="3"/><circle cx="88" cy="300" r="3"/><circle cx="70" cy="470" r="3"/>
-      </g>
-    </symbol>
-    <symbol id="vine-tall" viewBox="0 0 120 900">
-      <path d="M60 10 C20 90 100 140 55 220 C10 300 105 360 58 460 C12 560 100 620 60 740 C30 820 90 860 60 890" fill="none" stroke="currentColor" stroke-width="1.15"/>
-      <g fill="currentColor">
-        <ellipse cx="42" cy="80" rx="9" ry="4.5" transform="rotate(-28 42 80)"/>
-        <ellipse cx="82" cy="140" rx="10" ry="4.5" transform="rotate(24 82 140)"/>
-        <ellipse cx="38" cy="230" rx="9" ry="4.5" transform="rotate(-18 38 230)"/>
-        <ellipse cx="84" cy="310" rx="11" ry="4.5" transform="rotate(32 84 310)"/>
-        <ellipse cx="40" cy="410" rx="9" ry="4.5" transform="rotate(-30 40 410)"/>
-        <ellipse cx="82" cy="500" rx="10" ry="4.5" transform="rotate(18 82 500)"/>
-        <ellipse cx="42" cy="600" rx="9" ry="4.5" transform="rotate(-22 42 600)"/>
-        <ellipse cx="80" cy="690" rx="11" ry="4.5" transform="rotate(26 80 690)"/>
-        <circle cx="58" cy="180" r="2.6"/><circle cx="64" cy="360" r="2.6"/><circle cx="56" cy="540" r="2.6"/><circle cx="66" cy="760" r="2.6"/>
-      </g>
-    </symbol>
-    <symbol id="peony" viewBox="0 0 200 170">
-      <g fill="none" stroke="currentColor" stroke-width="1.1">
-        <ellipse cx="100" cy="88" rx="28" ry="22"/>
-        <ellipse cx="100" cy="88" rx="18" ry="14"/>
-        <path d="M70 80 C55 50 90 40 100 62 C110 40 145 50 130 80 C155 95 145 130 112 118 C100 140 70 130 78 108 C50 120 45 90 70 80z"/>
-        <path d="M40 130 C70 110 90 140 120 128 C150 140 160 110 175 125"/>
-      </g>
-    </symbol>
-    <symbol id="sprig" viewBox="0 0 64 64">
-      <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
-        <path d="M32 50 V18"/>
-        <path d="M32 28 C24 22 20 16 22 12"/>
-        <path d="M32 34 C40 28 46 22 44 16"/>
-        <path d="M32 40 C26 38 22 42 24 46"/>
-        <path d="M32 42 C38 40 42 44 40 48"/>
-      </g>
-    </symbol>
-  </svg>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
   <script src="script.js" defer></script>

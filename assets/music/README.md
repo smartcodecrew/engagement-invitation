@@ -1,13 +1,8 @@
-# Music folder
+# Music
 
-Place your background track here, for example:
+`piano.mp3` is a 70-second loop of **Gymnopédie No. 1** by Kevin MacLeod (incompetech.com).
 
-- `romantic.mp3`
-- `romantic.ogg` (optional fallback)
+Licensed under Creative Commons: By Attribution 4.0
+https://creativecommons.org/licenses/by/4.0/
 
-Then set `CONFIG.musicPath` in `script.js`.
-
-Notes:
-- Autoplay is disabled by design.
-- Prefer a soft instrumental track under ~5 MB for faster loading.
-- Ensure you have rights to use the audio file.
+Replace the file and set `CONFIG.music` in `script.js` if you want another track you have rights to use.
